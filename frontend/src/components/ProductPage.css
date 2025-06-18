@@ -1,0 +1,371 @@
+/* ProductPage.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.product-page {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f8f8f8;
+}
+
+/* Header */
+.product-header {
+  background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), 
+              linear-gradient(135deg, #d4b8a3, #c4a484);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 35vh;
+  padding: 25px 40px;
+}
+
+.product-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-left, .nav-right {
+  display: flex;
+  gap: 30px;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  transition: all 0.3s ease;
+  padding: 8px 16px;
+  border-radius: 20px;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Logo SKINALOGY dans le hero */
+.hero-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-grow: 1;
+}
+
+.hero-logo {
+  font-size: 4.5rem;
+  font-weight: bold;
+  color: white;
+  letter-spacing: 6px;
+  text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+}
+
+/* Section principale du produit */
+.product-main {
+  background: white;
+  padding: 40px;
+}
+
+.product-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.product-title {
+  font-size: 2.5rem;
+  color: #8B4513;
+  font-weight: bold;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.product-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+}
+
+/* Image du produit */
+.product-image-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.product-image-placeholder {
+  width: 400px;
+  height: 500px;
+  background: linear-gradient(135deg, #f0e6d2, #e8d7c3);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.product-image-placeholder::before {
+  content: "Image produit";
+  color: #999;
+  font-size: 16px;
+  position: absolute;
+}
+
+.price-section {
+  text-align: center;
+}
+
+.product-price {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #8B4513;
+}
+
+/* Informations du produit */
+.product-info {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.add-to-cart-section {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.add-to-cart-btn {
+  background: linear-gradient(135deg, #8B4513, #A0522D);
+  color: white;
+  border: none;
+  padding: 12px 40px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.add-to-cart-btn:hover {
+  background: linear-gradient(135deg, #A0522D, #8B4513);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(139, 69, 19, 0.3);
+}
+
+.product-tagline {
+  font-size: 1.2rem;
+  color: #333;
+  line-height: 1.4;
+}
+
+.product-description {
+  color: #555;
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+.product-benefits {
+  color: #555;
+}
+
+.benefits-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+.star-icon {
+  color: #daa520;
+  font-size: 16px;
+}
+
+.benefits-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.benefits-list li {
+  margin-bottom: 8px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.product-usage {
+  color: #555;
+}
+
+.usage-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+.bulb-icon {
+  color: #daa520;
+  font-size: 16px;
+}
+
+.product-usage p {
+  line-height: 1.7;
+}
+
+.product-features {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #555;
+}
+
+.check-icon {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.leaf-icon {
+  color: #28a745;
+  font-size: 16px;
+}
+
+/* Section prix et achat - supprimée car déplacée */
+
+/* Footer */
+.product-footer {
+  background: linear-gradient(135deg, #d4a574, #c49580);
+  padding: 40px;
+  text-align: center;
+  margin-top: 0;
+}
+
+.footer-logo {
+  font-size: 2.5rem;
+  color: white;
+  font-weight: bold;
+  letter-spacing: 4px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .product-content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+  
+  .product-image-placeholder {
+    width: 350px;
+    height: 450px;
+    margin: 0 auto;
+  }
+  
+  .add-to-cart-section {
+    justify-content: center;
+    margin-top: 15px;
+  }
+  
+  .product-purchase {
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-nav {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .nav-left, .nav-right {
+    gap: 20px;
+  }
+  
+  .hero-logo {
+    font-size: 3.5rem;
+    letter-spacing: 4px;
+  }
+  
+  .product-main {
+    padding: 30px 20px;
+  }
+  
+  .product-title {
+    font-size: 2rem;
+    text-align: center;
+  }
+  
+  .product-content {
+    gap: 30px;
+  }
+  
+  .product-image-placeholder {
+    width: 300px;
+    height: 380px;
+  }
+  
+  .product-price {
+    font-size: 2.5rem;
+  }
+  
+  .add-to-cart-btn {
+    padding: 12px 40px;
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-logo {
+    font-size: 3rem;
+    letter-spacing: 3px;
+  }
+  
+  .nav-link {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+  
+  .product-header {
+    height: 30vh;
+  }
+  
+  .product-title {
+    font-size: 1.8rem;
+  }
+  
+  .product-image-placeholder {
+    width: 250px;
+    height: 320px;
+  }
+  
+  .product-price {
+    font-size: 2rem;
+  }
+  
+  .add-to-cart-btn {
+    padding: 10px 30px;
+    font-size: 1rem;
+  }
+  
+  .footer-logo {
+    font-size: 2rem;
+    letter-spacing: 3px;
+  }
+}
