@@ -3,12 +3,12 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  color : #582828;
 }
 
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: 'Inria Sans', sans-serif;
   line-height: 1.6;
-  color: #333;
 }
 
 .homepage {
@@ -53,8 +53,10 @@ body {
 /* Hero Section */
 .hero {
   height: 100vh;
-  background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), 
-              linear-gradient(135deg, #d4b8a3, #c4a484);
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('../../public/logo/NavBar2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -67,7 +69,7 @@ body {
 }
 
 .hero-title {
-  font-size: 4.5rem;
+  font-size: 8rem;
   font-weight: bold;
   color: white;
   letter-spacing: 4px;
@@ -76,60 +78,67 @@ body {
 
 /* Section commune */
 .section-title {
-  font-size: 2rem;
+  font-size: 4rem;
   font-weight: bold;
-  color: #8B4513;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   letter-spacing: 2px;
+  text-align: left;
 }
 
 .section-title-white {
   font-size: 2rem;
   font-weight: bold;
   color: white;
-  margin-bottom: 20px;
   letter-spacing: 2px;
+  text-align: left;
 }
 
 /* TOP DU MOMENT */
 .top-moment {
-  padding: 80px 40px;
+  padding: 0px 40px;
+  padding-bottom: 80px;
   background-color: #f8f8f8;
 }
 
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 40px;
-  max-width: 1200px;
-  margin: 0 auto;
+.products-gridHome {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 20px;
+  height: 36rem;
 }
 
-.product-card {
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+.product-cardHome {
+  transition: transform 0.3s ease;
+  width: 30%;
+  min-width: 250px;
+}
+
+.product-cardHomeTips {
+  width: 100%;
   transition: transform 0.3s ease;
 }
 
-.product-card:hover {
+.product-cardHome:hover {
   transform: translateY(-5px);
 }
 
-.product-image {
-  position: relative;
-  height: 300px;
-  overflow: hidden;
+.product-cardHomeTips:hover {
+  transform: translateY(-5px);
 }
 
-.product-image img {
+.product-imageHome {
+  position: relative;
+  height: 85%;
+}
+
+.product-imageHome img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.placeholder-img {
+.placeholder-imgHome {
   width: 100%;
   height: 100%;
   background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
@@ -141,20 +150,20 @@ body {
   position: relative;
 }
 
-.placeholder-img::before {
+.placeholder-imgHome::before {
   content: "Image produit";
   position: absolute;
   color: #999;
 }
 
-.add-btn {
+.add-btnHome {
   position: absolute;
-  bottom: 15px;
-  right: 15px;
+  bottom: -15px;
+  right: -15px;
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #8B4513;
+  background-color: #582828;
   color: white;
   border: none;
   font-size: 20px;
@@ -162,87 +171,101 @@ body {
   transition: background-color 0.3s ease;
 }
 
-.add-btn:hover {
-  background-color: #A0522D;
+.white-btn{
+  background-color: white;
+  color : #582828;
 }
 
-.product-title {
-  font-size: 1.1rem;
+.add-btnHome:hover {
+  background-color: #a04848;
+}
+
+.product-titleHome {
+  font-size: 1.5rem;
   font-weight: 500;
-  color: #333;
-  padding: 15px 20px 5px;
+  text-align: left;
+  margin: 10px 0 5px 0;
 }
 
-.product-price {
-  font-size: 1.2rem;
+.product-priceHome {
+  font-size: 1.5rem;
   font-weight: bold;
-  color: #8B4513;
-  padding: 0 20px 20px;
+  text-align: left;
+  margin: 5px 0;
 }
 
 /* Partenariat */
 .partnership {
-  background: linear-gradient(135deg, #8B4513, #A0522D);
-  padding: 60px 40px;
-  text-align: center;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../../public/logo/pub.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .partnership-content {
-  max-width: 800px;
-  margin: 0 auto;
+  
 }
 
 .partnership-text h2 {
   font-size: 2.5rem;
   color: white;
-  margin-bottom: 10px;
+  text-align: left;
+  margin-left: 15px;
 }
 
 .partnership-text p {
   font-size: 1.2rem;
   color: white;
   margin-bottom: 20px;
+  text-align: left;
+  margin-left: 15px;
 }
 
 .partnership-offer p {
   font-size: 1.4rem;
   color: white;
   font-weight: bold;
+  text-align: right;
+  margin-right: 15px;
 }
 
 /* Beauty Basics */
 .beauty-basics {
-  padding: 80px 40px;
-  background-color: white;
+  padding: 3%;
 }
 
 .content-wrapper {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 60px;
-  max-width: 1200px;
-  margin: 0 auto;
-  align-items: start;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 40px;
+  height: 40rem;
+}
+
+.text-content {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .text-content h3 {
-  font-size: 1.4rem;
-  color: #333;
-  margin-bottom: 20px;
+  font-size: 2rem;
+  text-align: left;
+  margin-bottom: 5%;
 }
 
 .text-content p {
-  font-size: 1rem;
+  font-size: 1.5rem;
   line-height: 1.8;
-  color: #555;
-  margin-bottom: 30px;
+  text-align: left;
 }
 
 .beauty-link {
-  color: #8B4513;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s ease;
+  font-size: 1.3rem;
 }
 
 .beauty-link:hover {
@@ -251,75 +274,52 @@ body {
 
 .product-showcase {
   display: flex;
-  justify-content: center;
+  justify-content: right;
+  width: 50%;
+  padding-left: 15%;
+  padding-right: 5%;
+  transition: transform 0.3s ease;
 }
 
 /* Gift Ideas */
 .gift-ideas {
-  background-color: #8B4513;
-  padding: 80px 40px;
+  background-color: #582828;
+  padding: 20px 40px;
   text-align: center;
 }
 
-.section-subtitle {
+.section-subtitle{
+  font-size: 1.7rem;
   color: white;
-  font-size: 1.2rem;
-  margin-bottom: 50px;
-}
-
-.gift-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 40px;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.gift-card {
-  background: white;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-  transition: transform 0.3s ease;
-}
-
-.gift-card:hover {
-  transform: translateY(-8px);
-}
-
-.gift-image {
-  position: relative;
-  height: 250px;
-  overflow: hidden;
-}
-
-.gift-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.gift-image .placeholder-img::before {
-  content: "Image coffret";
-}
-
-.gift-title {
-  font-size: 1.2rem;
-  font-weight: 500;
-  color: #333;
-  padding: 20px 20px 5px;
-}
-
-.gift-price {
-  font-size: 1.3rem;
+  margin-bottom: 30px;
+  text-align: left;
   font-weight: bold;
-  color: #8B4513;
-  padding: 0 20px 25px;
+  margin-left : 100px;
+  margin-top: -25px;
 }
+
+.white {
+  color: white;
+  margin-bottom : 0px;
+}
+
+.gift{
+  width: 45%;
+}
+
+.gift h3{
+  color: white;
+}
+
+.gift p{
+  color: white;
+}
+
+
 
 /* Footer */
 .footer {
-  background-color: #A0522D;
+  background-color: #9E695F;
   padding: 40px;
   text-align: center;
 }
@@ -331,10 +331,84 @@ body {
   letter-spacing: 3px;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .hero-title {
+/* Media query spécifique pour tablettes (Surface Pro 7, iPad, etc.) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .top-moment {
+  }
+
+  .products-gridHome{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 26rem;
+  }
+
+  .product-cardHome {
+    transition: transform 0.3s ease;
+  }
+
+  .product-cardHome:hover {
+    transform: translateY(-5px);
+  }
+
+  .product-titleHome {
+    font-size: 1.1rem;
+
+}
+  
+  /* Beauty Basics - Tablette */
+  .beauty-basics {
+    padding: 40px 20px;
+  }
+  
+  .content-wrapper {
+    gap: 30px;
+    height: auto;
+    flex-direction: row;
+  }
+  
+  .text-content {
+    width: 100%;
+  }
+  
+  .text-content h3 {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+  }
+  
+  .text-content p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+  }
+  
+  .beauty-link {
+    font-size: 1.1rem;
+    margin-top: 20px;
+  }
+  
+  .product-showcase {
+    width: 100%;
+    padding: 0;
+    justify-content: center;
+    margin-top: 30px;
+  }
+  
+  .product-cardHomeTips {
+    max-width: 350px;
+    height: 400px;
+  }
+  
+  .section-title {
     font-size: 3rem;
+    text-align: left;
+  }
+}
+
+/* Responsive Design - Mobile */
+@media (max-width: 768px) {
+  /* Header */
+  .header {
+    padding: 15px 20px;
   }
   
   .nav {
@@ -342,22 +416,273 @@ body {
     gap: 20px;
   }
   
+  /* Hero */
+  .hero {
+    padding-left: 20px;
+  }
+  
+  .hero-title {
+    font-size: 3rem;
+  }
+  
+  /* Section TOP DU MOMENT - Mobile avec layout Typology */
+  .top-moment {
+    padding: 20px 15px;
+    padding-bottom: 40px;
+  }
+  
+  /* Container principal en CSS Grid pour le layout Typology */
+  .products-gridHome {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 colonnes */
+    grid-template-rows: auto auto; /* 2 rangées */
+    gap: 20px;
+    height: auto;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  /* Première carte - position normale */
+  .product-cardHome:nth-child(1) {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  
+  /* Deuxième carte - position normale */
+  .product-cardHome:nth-child(2) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  
+  /* Troisième carte - centrée en bas sur 2 colonnes */
+  .product-cardHome:nth-child(3) {
+    grid-column: 1 / 3; /* Prend les 2 colonnes */
+    grid-row: 2;
+    max-width: 240px; /* Largeur limitée */
+    margin: 0 auto; /* Centrage */
+  }
+  
+  .product-cardHome {
+    width: 100%;
+    min-width: unset;
+    height: 320px;
+    transition: transform 0.3s ease;
+  }
+  
+  .product-cardHome:hover {
+    transform: translateY(-5px);
+  }
+  
+  .product-cardHomeTips {
+    height: 350px;
+    transition: transform 0.3s ease;
+  }
+  
+  .product-cardHomeTips:hover {
+    transform: translateY(-5px);
+  }
+  
+  .product-imageHome {
+    height: 75%;
+  }
+  
+  .product-titleHome {
+    font-size: 1.1rem;
+    margin: 8px 0 4px 0;
+  }
+  
+  .product-priceHome {
+    font-size: 1.2rem;
+    margin: 4px 0;
+  }
+  
+  /* Beauty Basics - Mobile */
+  .beauty-basics {
+    padding: 20px 15px;
+  }
+  
   .content-wrapper {
-    grid-template-columns: 1fr;
-    gap: 40px;
+    flex-direction: column;
+    height: auto;
+    gap: 30px;
   }
   
-  .products-grid,
-  .gift-grid {
-    grid-template-columns: 1fr;
+  .text-content {
+    width: 100%;
   }
   
-  .section-title,
-  .section-title-white {
+  .text-content h3 {
     font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
+  
+  .text-content p {
+    font-size: 1.2rem;
+  }
+  
+  .beauty-link {
+    font-size: 1.1rem;
+  }
+  
+  .product-showcase {
+    width: 100%;
+    padding: 0;
+    justify-content: center;
+  }
+  
+  .product-cardHomeTips {
+    height: 350px;
+  }
+  
+  /* Sections */
+  .section-title {
+    font-size: 2.5rem;
+    text-align: center;
+  }
+  
+  .section-title-white {
+    font-size: 1.8rem;
+  }
+  
+  /* Partnership */
+  .partnership {
+    padding: 40px 20px;
   }
   
   .partnership-text h2 {
     font-size: 2rem;
+    text-align: center;
   }
+  
+  .partnership-text p,
+  .partnership-offer p {
+    text-align: center;
+    margin: 10px 15px;
+  }
+  
+  /* Gift grid */
+  .gift-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Pour iPhone 14 Pro spécifiquement (390px de largeur) */
+@media (max-width: 430px) {
+  .hero {
+    padding-left: 15px;
+  }
+  
+  .hero-title {
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+  }
+  
+  .top-moment {
+    padding: 15px 10px;
+    padding-bottom: 30px;
+  }
+  
+  .products-gridHome {
+    gap: 30px;
+    max-width: 350px;
+  }
+  
+  .product-cardHome {
+    height: 300px;
+    transition: transform 0.3s ease;
+  }
+  
+  .product-cardHome:hover {
+    transform: translateY(-5px);
+  }
+  
+  .product-cardHome:nth-child(3) {
+    max-width: 350px;
+  }
+  
+  .product-titleHome {
+    font-size: 0.6rem;
+  }
+  
+  .product-priceHome {
+    font-size: 1.1rem;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+    text-align: left;
+  }
+  
+  .add-btnHome {
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
+    bottom: -12px;
+    right: -12px;
+  }
+  
+  .beauty-basics {
+    padding: 15px 10px;
+  }
+  
+  .text-content h3 {
+    font-size: 1.2rem;
+  }
+  
+  .text-content p {
+    font-size: 1.1rem;
+  }
+  
+  .product-cardHomeTips {
+    height: 320px;
+    padding : 10px;
+    transition: transform 0.3s ease;
+  }
+  
+  .product-cardHomeTips:hover {
+    transform: translateY(-5px);
+  }
+  
+  .partnership-text h2{
+    text-align: left;
+    font-size: 1.5rem;
+  }
+
+  .partnership-text p{
+    text-align: left;
+    font-size: 1rem;
+    margin-top: 0;
+  }
+
+  .partnership-offer p{
+    text-align: right;
+    font-size: 0.8rem;
+  }
+
+  .partnership{
+    padding: 0px;
+  }
+
+  .beauty-link{
+    font-size: 1em;
+    margin-top: 20px;
+    text-align: right;
+  }
+
+  .nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section-subtitle{
+  font-size: 0.90rem;
+  margin-top: -5px;
+  margin-left: 0px;
+}
+
+.gift{
+  height: 300px;;
+}
 }
