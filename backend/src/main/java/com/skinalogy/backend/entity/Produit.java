@@ -14,9 +14,9 @@ public class Produit {
     @Column(name = "nom", length = 50, nullable = false)
     private String nom;
     
-    @Column(name = "prix", nullable = false, precision = 5, scale = 2)
+    @Column(name = "prix", nullable = false)
     private Double prix;
-    
+        
     @Column(name = "description", columnDefinition = "TEXT", nullable = false)
     private String description;
     

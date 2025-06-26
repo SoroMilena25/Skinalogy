@@ -1,12 +1,75 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import './ProductPage.css';
+import apiService from '../services/apiService';
 
 const ProductPage = () => {
   const [quantity, setQuantity] = useState(1);
+  const [produit, setProduit] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  const { id } = useParams(); // Récupère l'ID depuis l'URL
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchProduit = async () => {
+      try {
+        setLoading(true);
+        const produitData = await apiService.getProduitById(id);
+        console.log('Produit récupéré:', produitData);
+        console.log('Image URL:', produitData.image);
+        setProduit(produitData);
+      } catch (error) {
+        console.error('Erreur lors du chargement du produit:', error);
+        setError('Produit non trouvé');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchProduit();
+    }
+  }, [id]);
 
   const handleAddToCart = () => {
-    console.log('Ajouter au panier:', { quantity });
+    if (produit) {
+      console.log('Ajouter au panier:', { produit, quantity });
+      // Ici tu peux ajouter la logique pour le panier
+    }
   };
+
+  const formatPrice = (price) => {
+    return parseFloat(price).toFixed(2);
+  };
+
+  const handleHomeClick = () => {
+    navigate('/');
+  };
+
+  if (loading) {
+    return (
+      <div className="product-page">
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <p>Chargement...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !produit) {
+    return (
+      <div className="product-page">
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <p>{error || 'Produit non trouvé'}</p>
+          <button onClick={handleHomeClick} style={{ marginTop: '20px', padding: '10px 20px' }}>
+            Retour à l'accueil
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="product-page">
@@ -22,9 +85,11 @@ const ProductPage = () => {
           </div>
         </nav>
         
-        {/* Logo SKINALOGY */}
+        {/* Logo SKINALOGY cliquable pour retour accueil */}
         <div className="hero-content">
-          <h1 className="hero-logo">SKINALOGY</h1>
+          <h1 className="hero-logo" onClick={handleHomeClick} style={{ cursor: 'pointer' }}>
+            SKINALOGY
+          </h1>
         </div>
       </header>
 
@@ -32,74 +97,49 @@ const ProductPage = () => {
       <main className="product-main">
         <div className="product-container">
           {/* Titre du produit centré */}
-          <h2 className="product-title">Sérum - Vitamine C + B</h2>
+          <h2 className="product-title">{produit.nom}</h2>
           
           <div className="product-content">
             {/* Image du produit avec prix en dessous */}
             <div className="product-image-section">
-              <div className="product-image-placeholder"></div>
+              {produit.image ? (
+                  <img 
+                    src={produit.image.startsWith('/') ? produit.image : `/${produit.image}`}
+                    alt={produit.nom}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
+                  />
+                ) : null}
+                <div 
+                  className="placeholder-imgHome"
+                  style={{ display: produit.image ? 'none' : 'flex' }}
+                >
+                </div>
               
               {/* Prix sous l'image */}
               <div className="price-section">
-                <span className="product-price">8.45€</span>
+                <span className="product-price">{formatPrice(produit.prix)}€</span>
               </div>
             </div>
 
             {/* Informations du produit */}
             <div className="product-info">
               <div className="product-tagline">
-                <strong>Éclat. Uniformité. Hydratation.</strong>
+                {produit.topProduit && <strong>⭐ Top du moment</strong>}
+                {produit.ideeCadeau && <strong>🎁 Idée cadeau</strong>}
               </div>
 
               <div className="product-description">
-                <p>
-                  Ce sérum concentré associe la puissance antioxydante de la vitamine C à l'effet 
-                  apaisant et hydratant de la vitamine B5, pour révéler une peau visiblement plus 
-                  lumineuse, lisse et protégée.
-                </p>
-              </div>
-
-              <div className="product-benefits">
-                <div className="benefits-header">
-                  <span className="star-icon">✨</span>
-                  <strong>Pourquoi on l'adore :</strong>
-                </div>
-                <ul className="benefits-list">
-                  <li>• Illumine le teint et estompe les taches pigmentaires</li>
-                  <li>• Favorise la régénération cellulaire</li>
-                  <li>• Hydrate en profondeur sans effet gras</li>
-                  <li>• Texture légère, absorption rapide</li>
-                  <li>• Convient à tous les types de peau, même sensibles</li>
-                </ul>
-              </div>
-
-              <div className="product-usage">
-                <div className="usage-header">
-                  <span className="bulb-icon">💡</span>
-                  <strong>Conseil d'utilisation :</strong>
-                </div>
-                <p>
-                  Appliquer quelques gouttes matin et/ou soir sur peau propre avant la crème 
-                  hydratante. Toujours utiliser une protection solaire en journée pour optimiser 
-                  l'efficacité de la vitamine C.
-                </p>
-              </div>
-
-              <div className="product-features">
-                <div className="feature-item">
-                  <span className="check-icon">✓</span>
-                  <span>Formulé sans parabènes, silicones ni parfums artificiels.</span>
-                </div>
-                <div className="feature-item">
-                  <span className="leaf-icon">🌿</span>
-                  <span>Vegan & cruelty-free.</span>
-                </div>
+                <p style={{ whiteSpace: 'pre-line', textAlign: 'left' }}>{produit.description}</p>
               </div>
 
               {/* Bouton Ajouter tout en bas à droite de la colonne info */}
               <div className="add-to-cart-section">
                 <button className="add-to-cart-btn" onClick={handleAddToCart}>
-                  Ajouter
+                  Ajouter au panier
                 </button>
               </div>
             </div>
@@ -109,7 +149,9 @@ const ProductPage = () => {
 
       {/* Footer */}
       <footer className="product-footer">
-        <h2 className="footer-logo">SKINALOGY</h2>
+        <h2 className="footer-logo" onClick={handleHomeClick} style={{ cursor: 'pointer' }}>
+          SKINALOGY
+        </h2>
       </footer>
     </div>
   );

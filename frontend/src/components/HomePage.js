@@ -1,7 +1,46 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './HomePage.css';
+import apiService from '../services/apiService';
+import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
+  const [topProduits, setTopProduits] = useState([]);
+  const [ideeCadeaux, setIdeeCadeaux] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const topData = await apiService.getTopProduits();
+        const cadeauxData = await apiService.getIdeeCadeaux();
+        
+        setTopProduits(topData);
+        setIdeeCadeaux(cadeauxData);
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Fonction pour formater le prix
+  const formatPrice = (price) => {
+    return parseFloat(price).toFixed(2);
+  };
+
+  // Fonction pour naviguer vers la page produit
+  const handleProductClick = (produitId) => {
+    navigate(`/produit/${produitId}`);
+  };
+
+  // Fonction pour ajouter au panier (empêche la navigation)
+  const handleAddToCart = (e, produit) => {
+    e.stopPropagation(); // Empêche le clic de déclencher la navigation
+    console.log('Produit ajouté au panier:', produit);
+    // Logique d'ajout au panier ici
+  };
+
   return (
     <div className="homepage">
       {/* Header avec navigation */}
@@ -17,7 +56,7 @@ const HomePage = () => {
         </nav>
       </header>
 
-      {/* Section Hero avec image de fond */}
+      {/* Section Hero */}
       <section className="hero">
         <div className="hero-content">
           <h1 className="hero-title">SKINALOGY</h1>
@@ -28,59 +67,31 @@ const HomePage = () => {
       <section className="top-moment">
         <h2 className="section-title">TOP DU MOMENT</h2>
         <div className="products-gridHome">
-          {/*<div className="product-cardHome">
-            <div className="product-image">
-              <div className="placeholder-img"></div>
-              <button className="add-btnHome">+</button>
+          {topProduits.map((produit) => (
+            <div key={produit.id} className="product-cardHome title-top" onClick={() => handleProductClick(produit.id)}>
+              <h3 className="product-titleHome">{produit.nom}</h3>
+              <div className="product-imageHome">
+                {produit.image ? (
+                  <img 
+                    src={produit.image} 
+                    alt={produit.nom}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
+                  />
+                ) : null}
+                <div 
+                  className="placeholder-imgHome"
+                  style={{ display: produit.image ? 'none' : 'flex' }}
+                >
+                </div>
+                <button className="add-btnHome" onClick={(e) => handleAddToCart(e, produit)}>+</button>
+              </div>
+              <p className="product-priceHome">{formatPrice(produit.prix)}€</p>
             </div>
-            <h3 className="product-titleHome">Crème hydratante smooth</h3>
-            <p className="product-priceHome">14.50€</p>
-          </div>
-          
-          <div className="product-cardHome">
-            <div className="product-image">
-              <div className="placeholder-img"></div>
-              <button className="add-btnHome">+</button>
-            </div>
-            <h3 className="product-titleHome">Sérum - Acide hyaluronique</h3>
-            <p className="product-priceHome">12.75€</p>
-          </div>
-          
-          <div className="product-cardHome">
-            <div className="product-image">
-              <div className="placeholder-img"></div>
-              <button className="add-btnHome">+</button>
-            </div>
-            <h3 className="product-titleHome">Sérum - Vitamine C + B</h3>
-            <p className="product-priceHome">8.45€</p>
-          </div>*/}
-          <div className="product-cardHome title-top">
-            <h3 className="product-titleHome">Crème hydratante smooth</h3>
-            <div className="product-imageHome">
-              <div className="placeholder-imgHome"></div>
-              <button className="add-btnHome">+</button>
-            </div>
-            <p className="product-priceHome">14.50€</p>
-          </div>
-
-          <div className="product-cardHome title-top">
-            <h3 className="product-titleHome">Crème hydratante smooth</h3>
-            <div className="product-imageHome">
-              <div className="placeholder-imgHome"></div>
-              <button className="add-btnHome">+</button>
-            </div>
-            <p className="product-priceHome">14.50€</p>
-          </div>
-
-          <div className="product-cardHome title-top">
-            <h3 className="product-titleHome">Crème hydratante smooth</h3>
-            <div className="product-imageHome">
-              <div className="placeholder-imgHome"></div>
-              <button className="add-btnHome">+</button>
-            </div>
-            <p className="product-priceHome">14.50€</p>
-          </div>
-          
+          ))}
         </div>
       </section>
 
@@ -132,7 +143,7 @@ const HomePage = () => {
               <h3 className="product-titleHome">Crème solaire - SPF 50++</h3>
               <div className="product-imageHome">
                 <div className="placeholder-imgHome"></div>
-                <button className="add-btnHome">+</button>
+                <button className="add-btnHome">+</button>{/*onClick={(e) => handleAddToCart(e, produit)}*/}
               </div>
               <p className="product-priceHome">9.75€</p>
             </div>
@@ -143,49 +154,35 @@ const HomePage = () => {
       {/* Section Idées Cadeaux */}
       <section className="gift-ideas">
         <h2 className="section-title white">IDÉES CADEAUX</h2>
-        <p className="section-subtitle">Le fête des mères approches à grands pas !</p>
+        <p className="section-subtitle">La fête des mères approche à grands pas !</p>
         
-        {/* Grille de cartes cadeaux 
-        <div className="gift-grid">
-          <div className="gift-card">
-            <div className="gift-image">
-              <div className="placeholder-imgHome"></div>
-              <button className="add-btnHome">+</button>
-            </div>
-            <h3 className="gift-title">Coffret - Soins anti-âge</h3>
-            <p className="gift-price">38.50€</p>
-          </div>
-          
-          <div className="gift-card">
-            <div className="gift-image">
-              <div className="placeholder-imgHome"></div>
-              <button className="add-btnHome">+</button>
-            </div>
-            <h3 className="gift-title">Coffret - Routine complète florale</h3>
-            <p className="gift-price">45.85€</p>
-          </div>
-        </div>*/}
-
         <div className="products-gridHome">
-          <div className="product-cardHome title-top gift">
-            <h3 className="product-titleHome">Crème hydratante smooth</h3>
-            <div className="product-imageHome">
-              <div className="placeholder-imgHome"></div>
-              <button className="add-btnHome white-btn">+</button>
+          {ideeCadeaux.map((produit) => (
+            <div key={produit.id} className="product-cardHome title-top gift" onClick={() => handleProductClick(produit.id)}>
+              <h3 className="product-titleHome">{produit.nom}</h3>
+              <div className="product-imageHome">
+                {produit.image ? (
+                  <img 
+                    src={produit.image} 
+                    alt={produit.nom}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
+                  />
+                ) : null}
+                <div 
+                  className="placeholder-imgHome"
+                  style={{ display: produit.image ? 'none' : 'flex' }}
+                >
+                </div>
+                <button className="add-btnHome white-btn" onClick={(e) => handleAddToCart(e, produit)}>+</button>
+              </div>
+              <p className="product-priceHome">{formatPrice(produit.prix)}€</p>
             </div>
-            <p className="product-priceHome">14.50€</p>
-          </div>
-          <div className="product-cardHome title-top gift">
-            <h3 className="product-titleHome">Crème hydratante smooth</h3>
-            <div className="product-imageHome">
-              <div className="placeholder-imgHome"></div>
-              <button className="add-btnHome white-btn">+</button>
-            </div>
-            <p className="product-priceHome">14.50€</p>
-          </div>
+          ))}
         </div>
-
-        
       </section>
 
       {/* Footer */}

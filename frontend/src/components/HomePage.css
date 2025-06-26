@@ -112,6 +112,7 @@ body {
   transition: transform 0.3s ease;
   width: 30%;
   min-width: 250px;
+  cursor: 'pointer';
 }
 
 .product-cardHomeTips {
@@ -185,6 +186,9 @@ body {
   font-weight: 500;
   text-align: left;
   margin: 10px 0 5px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .product-priceHome {
@@ -602,6 +606,7 @@ body {
   
   .product-titleHome {
     font-size: 0.6rem;
+    max-width: 130px;
   }
   
   .product-priceHome {
@@ -686,3 +691,5 @@ body {
   height: 300px;;
 }
 }
+
+/* iphone 14 pro pas corrger, mais iphone 12 pro ok */

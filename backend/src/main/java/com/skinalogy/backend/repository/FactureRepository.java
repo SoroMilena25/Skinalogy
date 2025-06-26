@@ -14,9 +14,6 @@ public interface FactureRepository extends JpaRepository<Facture, Integer> {
     // Récupérer les factures par date (entre deux dates)
     List<Facture> findByDatePaiementBetween(LocalDateTime startDate, LocalDateTime endDate);
     
-    // Récupérer les factures d'une date spécifique
-    List<Facture> findByDatePaiementBetween(LocalDateTime startOfDay, LocalDateTime endOfDay);
-    
     // Récupérer les factures triées par date décroissante (plus récentes en premier)
     List<Facture> findAllByOrderByDatePaiementDesc();
     
