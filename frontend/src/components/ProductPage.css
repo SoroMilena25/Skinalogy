@@ -98,7 +98,7 @@
   gap: 20px;
 }
 
-.product-image-placeholder {
+.productPage-image-placeholder {
   width: 400px;
   height: 500px;
   background: linear-gradient(135deg, #f0e6d2, #e8d7c3);
@@ -110,7 +110,7 @@
   box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 }
 
-.product-image-placeholder::before {
+.productPage-image-placeholder::before {
   content: "Image produit";
   color: #999;
   font-size: 16px;
@@ -272,7 +272,7 @@
     text-align: center;
   }
   
-  .product-image-placeholder {
+  .productPage-image-placeholder {
     width: 350px;
     height: 450px;
     margin: 0 auto;
@@ -316,7 +316,7 @@
     gap: 30px;
   }
   
-  .product-image-placeholder {
+  .productPage-image-placeholder {
     width: 300px;
     height: 380px;
   }
@@ -350,7 +350,7 @@
     font-size: 1.8rem;
   }
   
-  .product-image-placeholder {
+  .productPage-image-placeholder {
     width: 250px;
     height: 320px;
   }

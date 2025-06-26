@@ -15,7 +15,7 @@ public class Facture {
     @Column(name = "datePaiement", nullable = false)
     private LocalDateTime datePaiement;
     
-    @Column(name = "total", nullable = false, precision = 10, scale = 2)
+    @Column(name = "total", nullable = false)
     private Double total;
     
     // Constructeurs
