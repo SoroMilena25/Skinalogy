@@ -3,6 +3,7 @@ package com.skinalogy.backend.service;
 import com.skinalogy.backend.entity.Utilisateur;
 import com.skinalogy.backend.repository.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,9 @@ public class UtilisateurService {
     
     @Autowired
     private UtilisateurRepository utilisateurRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     
     // Récupérer tous les utilisateurs
     public List<Utilisateur> getAllUtilisateurs() {
@@ -44,12 +48,22 @@ public class UtilisateurService {
         return utilisateurRepository.findByRole(role);
     }
     
-    // Créer un nouvel utilisateur
+    // Créer un nouvel utilisateur avec mot de passe hashé
     public Utilisateur createUtilisateur(Utilisateur utilisateur) {
         // Vérifier si l'email existe déjà
         if (emailExists(utilisateur.getEmail())) {
             throw new RuntimeException("Email déjà utilisé");
         }
+        
+        // Vérifier que le mot de passe n'est pas null ou vide
+        if (utilisateur.getMdp() == null || utilisateur.getMdp().trim().isEmpty()) {
+            throw new RuntimeException("Le mot de passe ne peut pas être vide");
+        }
+        
+        // Hasher le mot de passe avant de sauvegarder
+        String hashedPassword = passwordEncoder.encode(utilisateur.getMdp());
+        utilisateur.setMdp(hashedPassword);
+        
         return utilisateurRepository.save(utilisateur);
     }
     
@@ -66,7 +80,13 @@ public class UtilisateurService {
                     utilisateur.setNom(utilisateurDetails.getNom());
                     utilisateur.setPrenom(utilisateurDetails.getPrenom());
                     utilisateur.setEmail(utilisateurDetails.getEmail());
-                    utilisateur.setMdp(utilisateurDetails.getMdp());
+                    
+                    // Si un nouveau mot de passe est fourni, le hasher
+                    if (utilisateurDetails.getMdp() != null && !utilisateurDetails.getMdp().trim().isEmpty()) {
+                        String hashedPassword = passwordEncoder.encode(utilisateurDetails.getMdp());
+                        utilisateur.setMdp(hashedPassword);
+                    }
+                    
                     utilisateur.setRole(utilisateurDetails.getRole());
                     return utilisateurRepository.save(utilisateur);
                 })
@@ -83,9 +103,19 @@ public class UtilisateurService {
                 .orElse(false);
     }
     
-    // Authentification simple (à améliorer avec Spring Security plus tard)
+    // Authentification avec vérification du mot de passe hashé
     public Optional<Utilisateur> authenticate(String email, String password) {
         return utilisateurRepository.findByEmail(email)
-                .filter(user -> user.getMdp().equals(password));
+                .filter(user -> passwordEncoder.matches(password, user.getMdp()));
+    }
+    
+    // Méthode utilitaire pour vérifier un mot de passe
+    public boolean checkPassword(String rawPassword, String hashedPassword) {
+        return passwordEncoder.matches(rawPassword, hashedPassword);
+    }
+    
+    // Méthode utilitaire pour hasher un mot de passe (si besoin externe)
+    public String hashPassword(String rawPassword) {
+        return passwordEncoder.encode(rawPassword);
     }
 }

@@ -254,7 +254,6 @@
   box-shadow: 0 8px 20px rgba(139, 69, 19, 0.3);
 }
 
-/* Footer */
 .product-footer {
   background: linear-gradient(135deg, #d4a574, #c49580);
   padding: 40px;
@@ -270,7 +269,6 @@
   text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
-/* Responsive Design */
 @media (max-width: 1024px) {
   .product-content {
     grid-template-columns: 1fr;
@@ -373,3 +371,4 @@
     letter-spacing: 3px;
   }
 }
+
