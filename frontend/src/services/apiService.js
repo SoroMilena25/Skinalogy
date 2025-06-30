@@ -11,7 +11,6 @@ class ApiService {
     return response.json();
   }
 
-    // Nouvelle méthode pour récupérer un produit par ID
   async getProduitById(id) {
     const response = await fetch(`${API_BASE_URL}/produits/${id}`);
     if (!response.ok) {
@@ -20,7 +19,6 @@ class ApiService {
     return response.json();
   }
 
-  // Méthode pour récupérer tous les produits (optionnel)
   async getAllProduits() {
     const response = await fetch(`${API_BASE_URL}/produits`);
     return response.json();

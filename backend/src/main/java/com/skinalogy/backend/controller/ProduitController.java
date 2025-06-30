@@ -10,19 +10,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/produits")
-@CrossOrigin(origins = "http://localhost:3000") // Pour ton React
+@CrossOrigin(origins = "http://localhost:3000")
 public class ProduitController {
     
     @Autowired
     private ProduitService produitService;
     
-    // GET /api/produits - Récupérer tous les produits
     @GetMapping
     public List<Produit> getAllProduits() {
         return produitService.getAllProduits();
     }
     
-    // GET /api/produits/{id} - Récupérer un produit par ID
     @GetMapping("/{id}")
     public ResponseEntity<Produit> getProduitById(@PathVariable Integer id) {
         return produitService.getProduitById(id)
@@ -30,7 +28,6 @@ public class ProduitController {
                 .orElse(ResponseEntity.notFound().build());
     }
     
-    // GET /api/produits/top - Récupérer les produits "Top du moment" (pour ta homepage)
     @GetMapping("/top")
     public List<Produit> getTopProduits() {
         return produitService.getTopProduits();
