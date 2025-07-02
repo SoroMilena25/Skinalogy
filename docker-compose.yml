@@ -1,0 +1,72 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: skinalogy-mysql-${APP_ENV:-dev}
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: bdd_skinalogy_${APP_ENV:-dev}
+      MYSQL_USER: skinalogy_user
+      MYSQL_PASSWORD: skinalogy_password
+    ports:
+      - "${MYSQL_PORT:-3307}:3306"
+    volumes:
+      - mysql_data_${APP_ENV:-dev}:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - skinalogy-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: skinalogy-backend-${APP_ENV:-dev}
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/bdd_skinalogy_${APP_ENV:-dev}
+      SPRING_DATASOURCE_USERNAME: skinalogy_user
+      SPRING_DATASOURCE_PASSWORD: skinalogy_password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE:-dev}
+    ports:
+      - "${BACKEND_PORT:-8080}:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - skinalogy-network
+    volumes:
+      - ./uploads:/app/uploads
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: skinalogy-frontend-${APP_ENV:-dev}
+    restart: unless-stopped
+    environment:
+      REACT_APP_API_URL: http://20.199.26.188:${BACKEND_PORT:-8080}/api
+      REACT_APP_ENV: ${APP_ENV:-dev}
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    depends_on:
+      - backend
+    networks:
+      - skinalogy-network
+
+volumes:
+  mysql_data_dev:
+    driver: local
+  mysql_data_staging:
+    driver: local
+  mysql_data_production:
+    driver: local
+
+networks:
+  skinalogy-network:
+    driver: bridge
+    name: skinalogy-${APP_ENV:-dev}
