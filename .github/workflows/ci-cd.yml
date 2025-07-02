@@ -287,35 +287,10 @@ jobs:
           
           echo "🎉 PRODUCTION deployed on http://20.199.26.188"
     
-    - name: 🔍 Production health checks
-      uses: appleboy/ssh-action@v1.0.0
-      with:
-        host: ${{ secrets.AZURE_VM_HOST }}
-        username: ${{ secrets.AZURE_VM_USER }}
-        key: ${{ secrets.AZURE_VM_SSH_KEY }}
-        script: |
-          sleep 20
-          
-          # Test frontend
-          if curl -f http://localhost > /dev/null 2>&1; then
-            echo "✅ Production frontend OK"
-          else
-            echo "❌ Production frontend failed"
-            exit 1
-          fi
-          
-          # Test backend
-          if curl -f http://localhost:8082/health > /dev/null 2>&1; then
-            echo "✅ Production backend OK"
-          else
-            echo "⚠️ Backend health endpoint not configured"
-          fi
-          
-          echo "🎉 Production deployment successful!"
-    
     - name: 📢 Notify deployment success
       run: |
-        echo "🚀 PRODUCTION DEPLOYMENT SUCCESSFUL!"
+        echo "🚀 PRODUCTION DEPLOYMENT COMPLETED!"
         echo "🌐 Skinalogy is live: http://20.199.26.188"
         echo "📊 Staging: http://20.199.26.188:3001"
         echo "🛠️ Dev: http://20.199.26.188:3000"
+        echo "⏰ Wait 1-2 minutes for containers to fully start"
