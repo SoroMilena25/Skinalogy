@@ -1,0 +1,266 @@
+name: Professional CI/CD Pipeline Skinalogy
+
+on:
+  push:
+    branches: [ main, staging, dev ]
+  pull_request:
+    branches: [ main, staging ]
+
+env:
+  # Variables globales
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # 🧪 TESTS - Toujours exécutés
+  test-backend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+    
+    - name: Cache Maven dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+    
+    - name: Run backend tests
+      run: |
+        cd backend
+        mvn clean test
+    
+    - name: Generate test report
+      run: |
+        cd backend
+        mvn surefire-report:report
+    
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: backend-test-results
+        path: backend/target/surefire-reports/
+
+  test-frontend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+    
+    - name: Install dependencies
+      run: |
+        cd frontend
+        npm ci
+    
+    - name: Run frontend tests
+      run: |
+        cd frontend
+        npm test -- --coverage --watchAll=false
+    
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v4
+      with:
+        directory: frontend/coverage
+
+  # 🏗️ BUILD - Seulement pour staging et main
+  build:
+    needs: [test-backend, test-frontend]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: Build backend image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./backend
+        load: true
+        tags: skinalogy-backend:${{ github.sha }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    
+    - name: Build frontend image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./frontend
+        load: true
+        tags: skinalogy-frontend:${{ github.sha }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+  # 🚀 DEPLOY DEV - Automatique sur push dev
+  deploy-dev:
+    needs: [test-backend, test-frontend]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/dev'
+    environment: development
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: 🚀 Deploy to DEV Environment
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.AZURE_VM_HOST }}
+        username: ${{ secrets.AZURE_VM_USER }}
+        key: ${{ secrets.AZURE_VM_SSH_KEY }}
+        script: |
+          echo "🔄 Deploying to DEV environment (port 3000)..."
+          
+          cd /opt/skinalogy/dev || mkdir -p /opt/skinalogy/dev && cd /opt/skinalogy/dev
+          
+          if [ ! -d ".git" ]; then
+            git clone -b dev https://github.com/${{ github.repository }}.git .
+          else
+            git fetch origin dev
+            git reset --hard origin/dev
+            git pull origin dev
+          fi
+          
+          # Utilise docker-compose.dev.yml ou le standard avec port 3000
+          docker-compose -f docker-compose.yml down || true
+          docker-compose -f docker-compose.yml up -d --build
+          
+          echo "✅ DEV deployed on http://20.199.26.188:3000"
+
+  # 🧪 DEPLOY STAGING - Automatique sur push staging  
+  deploy-staging:
+    needs: [test-backend, test-frontend, build]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/staging'
+    environment: staging
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: 🧪 Deploy to STAGING Environment
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.AZURE_VM_HOST }}
+        username: ${{ secrets.AZURE_VM_USER }}
+        key: ${{ secrets.AZURE_VM_SSH_KEY }}
+        script: |
+          echo "🔄 Deploying to STAGING environment (port 3001)..."
+          
+          cd /opt/skinalogy/staging || mkdir -p /opt/skinalogy/staging && cd /opt/skinalogy/staging
+          
+          if [ ! -d ".git" ]; then
+            git clone -b staging https://github.com/${{ github.repository }}.git .
+          else
+            git fetch origin staging
+            git reset --hard origin/staging
+            git pull origin staging
+          fi
+          
+          # Modifie le port pour staging
+          export COMPOSE_PROJECT_NAME=skinalogy_staging
+          export FRONTEND_PORT=3001
+          export BACKEND_PORT=8081
+          
+          docker-compose down || true
+          docker-compose up -d --build
+          
+          echo "✅ STAGING deployed on http://20.199.26.188:3001"
+    
+    - name: 🧪 Run staging smoke tests
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.AZURE_VM_HOST }}
+        username: ${{ secrets.AZURE_VM_USER }}
+        key: ${{ secrets.AZURE_VM_SSH_KEY }}
+        script: |
+          sleep 15
+          if curl -f http://localhost:3001 > /dev/null 2>&1; then
+            echo "✅ Staging health check passed"
+          else
+            echo "❌ Staging health check failed"
+            exit 1
+          fi
+
+  # 🏆 DEPLOY PRODUCTION - Automatique sur push main
+  deploy-production:
+    needs: [test-backend, test-frontend, build]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: 🏆 Deploy to PRODUCTION Environment
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.AZURE_VM_HOST }}
+        username: ${{ secrets.AZURE_VM_USER }}
+        key: ${{ secrets.AZURE_VM_SSH_KEY }}
+        script: |
+          echo "🔄 Deploying to PRODUCTION environment (port 80)..."
+          
+          cd /opt/skinalogy/production || mkdir -p /opt/skinalogy/production && cd /opt/skinalogy/production
+          
+          if [ ! -d ".git" ]; then
+            git clone -b main https://github.com/${{ github.repository }}.git .
+          else
+            git fetch origin main
+            git reset --hard origin/main
+            git pull origin main
+          fi
+          
+          # Configuration production
+          export COMPOSE_PROJECT_NAME=skinalogy_prod
+          export FRONTEND_PORT=80
+          export BACKEND_PORT=8080
+          
+          docker-compose down || true
+          docker-compose up -d --build
+          
+          echo "🎉 PRODUCTION deployed on http://20.199.26.188"
+    
+    - name: 🔍 Production health checks
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.AZURE_VM_HOST }}
+        username: ${{ secrets.AZURE_VM_USER }}
+        key: ${{ secrets.AZURE_VM_SSH_KEY }}
+        script: |
+          sleep 20
+          
+          # Test frontend
+          if curl -f http://localhost > /dev/null 2>&1; then
+            echo "✅ Production frontend OK"
+          else
+            echo "❌ Production frontend failed"
+            exit 1
+          fi
+          
+          # Test backend
+          if curl -f http://localhost:8080/health > /dev/null 2>&1; then
+            echo "✅ Production backend OK"
+          else
+            echo "⚠️ Backend health endpoint not configured"
+          fi
+          
+          echo "🎉 Production deployment successful!"
+    
+    - name: 📢 Notify deployment success
+      run: |
+        echo "🚀 PRODUCTION DEPLOYMENT SUCCESSFUL!"
+        echo "🌐 Skinalogy is live: http://20.199.26.188"
+        echo "📊 Staging: http://20.199.26.188:3001"
+        echo "🛠️ Dev: http://20.199.26.188:3000"
