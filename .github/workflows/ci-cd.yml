@@ -7,14 +7,30 @@ on:
     branches: [ main, staging ]
 
 env:
-  # Variables globales
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  # 🧪 TESTS - Toujours exécutés
+  # 🧪 TESTS BACKEND avec MySQL
   test-backend:
     runs-on: ubuntu-latest
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: bdd_skinalogy_test
+          MYSQL_USER: skinalogy_user
+          MYSQL_PASSWORD: skinalogy_password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+    
     steps:
     - uses: actions/checkout@v4
     
@@ -30,10 +46,21 @@ jobs:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
     
+    - name: Wait for MySQL
+      run: |
+        while ! mysqladmin ping -h"127.0.0.1" --silent; do
+          sleep 1
+        done
+    
     - name: Run backend tests
       run: |
         cd backend
         mvn clean test
+      env:
+        SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/bdd_skinalogy_test
+        SPRING_DATASOURCE_USERNAME: skinalogy_user
+        SPRING_DATASOURCE_PASSWORD: skinalogy_password
+        SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
     
     - name: Generate test report
       run: |
@@ -47,6 +74,7 @@ jobs:
         name: backend-test-results
         path: backend/target/surefire-reports/
 
+  # 🧪 TESTS FRONTEND
   test-frontend:
     runs-on: ubuntu-latest
     steps:
@@ -104,7 +132,7 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
-  # 🚀 DEPLOY DEV - Automatique sur push dev
+  # 🚀 DEPLOY DEV
   deploy-dev:
     needs: [test-backend, test-frontend]
     runs-on: ubuntu-latest
@@ -133,13 +161,19 @@ jobs:
             git pull origin dev
           fi
           
-          # Utilise docker-compose.dev.yml ou le standard avec port 3000
-          docker-compose -f docker-compose.yml down || true
-          docker-compose -f docker-compose.yml up -d --build
+          # Variables d'environnement pour DEV
+          export APP_ENV=dev
+          export FRONTEND_PORT=3000
+          export BACKEND_PORT=8080
+          export MYSQL_PORT=3307
+          export SPRING_PROFILE=dev
+          
+          docker-compose down || true
+          docker-compose up -d --build
           
           echo "✅ DEV deployed on http://20.199.26.188:3000"
 
-  # 🧪 DEPLOY STAGING - Automatique sur push staging  
+  # 🧪 DEPLOY STAGING
   deploy-staging:
     needs: [test-backend, test-frontend, build]
     runs-on: ubuntu-latest
@@ -168,10 +202,12 @@ jobs:
             git pull origin staging
           fi
           
-          # Modifie le port pour staging
-          export COMPOSE_PROJECT_NAME=skinalogy_staging
+          # Variables d'environnement pour STAGING
+          export APP_ENV=staging
           export FRONTEND_PORT=3001
           export BACKEND_PORT=8081
+          export MYSQL_PORT=3308
+          export SPRING_PROFILE=staging
           
           docker-compose down || true
           docker-compose up -d --build
@@ -193,7 +229,7 @@ jobs:
             exit 1
           fi
 
-  # 🏆 DEPLOY PRODUCTION - Automatique sur push main
+  # 🏆 DEPLOY PRODUCTION
   deploy-production:
     needs: [test-backend, test-frontend, build]
     runs-on: ubuntu-latest
@@ -222,10 +258,12 @@ jobs:
             git pull origin main
           fi
           
-          # Configuration production
-          export COMPOSE_PROJECT_NAME=skinalogy_prod
+          # Variables d'environnement pour PRODUCTION
+          export APP_ENV=production
           export FRONTEND_PORT=80
-          export BACKEND_PORT=8080
+          export BACKEND_PORT=8082
+          export MYSQL_PORT=3309
+          export SPRING_PROFILE=prod
           
           docker-compose down || true
           docker-compose up -d --build
@@ -250,7 +288,7 @@ jobs:
           fi
           
           # Test backend
-          if curl -f http://localhost:8080/health > /dev/null 2>&1; then
+          if curl -f http://localhost:8082/health > /dev/null 2>&1; then
             echo "✅ Production backend OK"
           else
             echo "⚠️ Backend health endpoint not configured"
