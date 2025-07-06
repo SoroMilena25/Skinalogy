@@ -18,6 +18,10 @@ public class AstuceService {
     public List<Astuce> getAllAstuces() {
         return astuceRepository.findAllByOrderByTitreAsc();
     }
+
+    public Optional<Astuce> getAstuceTopHome() {
+        return astuceRepository.findByTopHome();
+    }
     
     // Récupérer une astuce par ID
     public Optional<Astuce> getAstuceById(Integer id) {
