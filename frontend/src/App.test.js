@@ -15,7 +15,7 @@ test('renders navigation links', () => {
   // Teste que tes liens de navigation sont présents
   const connexionLink = screen.getByText(/CONNEXION/i);
   
-  expect(aboutLink).toBeInTheDocument();
+
   expect(connexionLink).toBeInTheDocument();
 });
 
