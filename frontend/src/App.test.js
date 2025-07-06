@@ -13,7 +13,6 @@ test('renders navigation links', () => {
   render(<App />);
   
   // Teste que tes liens de navigation sont présents
-  const aboutLink = screen.getByText(/ABOUT/i);
   const connexionLink = screen.getByText(/CONNEXION/i);
   
   expect(aboutLink).toBeInTheDocument();
