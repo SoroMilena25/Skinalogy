@@ -13,13 +13,15 @@
 
 /* Header */
 .product-header {
-  background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), 
-              linear-gradient(135deg, #d4b8a3, #c4a484);
+  background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('../../public/logo/NavBar2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 35vh;
+  height: 40vh;
   padding: 25px 40px;
 }
 
@@ -128,16 +130,18 @@
 }
 
 /* Informations du produit */
-.product-info {
+.product-info-Product {
   display: flex;
   flex-direction: column;
   gap: 25px;
+  justify-content: space-between;
 }
 
 .add-to-cart-section {
   display: flex;
   justify-content: flex-end;
   margin-top: 20px;
+  max-height: 10%;
 }
 
 .add-to-cart-btn {
@@ -152,6 +156,7 @@
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 1px;
+  max-height: 45px;
 }
 
 .add-to-cart-btn:hover {

@@ -20,7 +20,7 @@ public class Astuce {
     @Column(name = "image", length = 255)
     private String image;
     
-    @Column(name = "IdProduit")
+    @Column(name = "idProduit")
     private Integer idProduit;
     
     // Constructeurs

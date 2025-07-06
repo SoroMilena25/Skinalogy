@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/astuces")
@@ -52,6 +53,11 @@ public class AstuceController {
     @GetMapping("/search/texte")
     public List<Astuce> searchAstucesByTexte(@RequestParam String texte) {
         return astuceService.searchAstucesByTexte(texte);
+    }
+
+    @GetMapping("/topHome")
+    public Optional<Astuce> getAstuceTopHome() {
+        return astuceService.getAstuceTopHome();
     }
     
     // POST /api/astuces - Créer une nouvelle astuce

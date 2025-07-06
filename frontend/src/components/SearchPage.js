@@ -1,54 +1,145 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './SearchPage.css';
+import apiService from '../services/apiService';
+import Navbar from './Navbar';
+import Footer from './Footer';
+import { useCart } from '../hooks/useCart';
+import { useNavigate } from 'react-router-dom';
 
-const SearchpPage = () => {
+const SearchPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [priceRange, setPriceRange] = useState({ min: 0, max: 100 });
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedSkinTypes, setSelectedSkinTypes] = useState([]);
-  const [selectedOthers, setSelectedOthers] = useState([]);
-  
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [maxPrice, setMaxPrice] = useState(100);
+  const [categories, setCategories] = useState([]);
+  const [skinTypes, setSkinTypes] = useState([]);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
   // États pour les sections dépliables
   const [isPriceOpen, setIsPriceOpen] = useState(true);
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(true);
   const [isSkinTypesOpen, setIsSkinTypesOpen] = useState(true);
-  const [isOthersOpen, setIsOthersOpen] = useState(true);
 
-  // Données des produits
-  const products = [
-    { id: 1, name: 'Crème hydratante smooth', price: 14.50, category: 'cremes-hydratantes', image: 'cream1' },
-    { id: 2, name: 'Sérum - Acide hyaluronique', price: 12.75, category: 'serums', image: 'serum1' },
-    { id: 3, name: 'Sérum - Vitamine C + B', price: 8.45, category: 'serums', image: 'serum2' },
-    { id: 4, name: 'Crème solaire - SPF 50++', price: 9.75, category: 'cremes-solaires', image: 'sunscreen' },
-    { id: 5, name: 'Coffret - Routine complète florale', price: 45.85, category: 'coffrets', image: 'gift1' },
-    { id: 6, name: 'Coffret - Soins anti-âge', price: 38.50, category: 'coffrets', image: 'gift2' },
-    { id: 7, name: 'Sérum - hydratante & apaisante', price: 11.25, category: 'serums', image: 'serum3' },
-    { id: 8, name: 'Coffret - Routine complète peau s...', price: 52.50, category: 'coffrets', image: 'gift3' }
-  ];
+  // Hook pour le panier
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
 
-  const handleCategoryChange = (category) => {
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setIsLoading(true);
+      try {
+        const data = await apiService.getAllProduits();
+        setProducts(data);
+        setFilteredProducts(data);
+        
+        // Calcul du prix max
+        const prixMaxRaw = data.length > 0 ? Math.max(...data.map(p => p.prix || 0)) : 100;
+        const prixMax = Math.ceil(prixMaxRaw);
+        setMaxPrice(prixMax);
+        setPriceRange({ min: 0, max: prixMax });
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    const fetchCategories = async () => {
+      try {
+        const data = await apiService.getCategories();
+        setCategories(data);
+      } catch (err) {
+        setCategories([]);
+      }
+    };
+
+    const fetchSkinTypes = async () => {
+      try {
+        const data = await apiService.getTypesPeau();
+        setSkinTypes(data);
+      } catch (err) {
+        setSkinTypes([]);
+      }
+    };
+
+    fetchProducts();
+    fetchCategories();
+    fetchSkinTypes();
+  }, []);
+
+  // Fonction pour naviguer vers la page produit
+  const handleProductClick = (productId) => {
+    navigate(`/produit/${productId}`);
+  };
+
+  // Fonction pour ajouter au panier
+  const handleAddToCart = (e, product) => {
+    e.stopPropagation();
+    
+    const success = addToCart({
+      id: product.id,
+      nom: product.nom,
+      prix: product.prix,
+      image: product.image
+    });
+  };
+
+  // Fonctions pour gérer les filtres
+  const handleCategoryChange = (categoryId) => {
     setSelectedCategories(prev => 
-      prev.includes(category) 
-        ? prev.filter(c => c !== category)
-        : [...prev, category]
+      prev.includes(categoryId) 
+        ? prev.filter(c => c !== categoryId)
+        : [...prev, categoryId]
     );
+  };
+
+  const handleSkinTypeChange = (skinTypeId) => {
+    setSelectedSkinTypes(prev => 
+      prev.includes(skinTypeId) 
+        ? prev.filter(s => s !== skinTypeId)
+        : [...prev, skinTypeId]
+    );
+  };
+
+  // Fonction pour réinitialiser tous les filtres
+  const handleResetFilters = () => {
+    setSearchTerm('');
+    setPriceRange({ min: 0, max: maxPrice });
+    setSelectedCategories([]);
+    setSelectedSkinTypes([]);
+    setFilteredProducts(products);
+    setIsMobileFilterOpen(false);
+  };
+
+  // Fonction pour appliquer les filtres
+  const handleApplyFilters = () => {
+    let filtered = products.filter(product => {
+      const price = product.prix || 0;
+      if (price < priceRange.min || price > priceRange.max) return false;
+      if (selectedCategories.length > 0 && !selectedCategories.includes(product.idCategorie)) return false;
+      if (selectedSkinTypes.length > 0 && !selectedSkinTypes.includes(product.idTypePeau)) return false;
+      if (searchTerm && !product.nom.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+      return true;
+    });
+    setFilteredProducts(filtered);
+    setIsMobileFilterOpen(false);
+  };
+
+  // Fonction pour basculer l'affichage mobile du filtre
+  const toggleMobileFilter = () => {
+    setIsMobileFilterOpen(!isMobileFilterOpen);
   };
 
   return (
     <div className="shop-page">
-      {/* Header avec navigation */}
+      <Navbar />
+      {/* Header avec logo et hero */}
       <header className="shop-header">
-        <nav className="shop-nav">
-          <div className="nav-left">
-            <a href="#about" className="nav-link">ABOUT</a>
-          </div>
-          <div className="nav-right">
-            <a href="#connexion" className="nav-link">CONNEXION</a>
-            <a href="#panier" className="nav-link">PANIER</a>
-          </div>
-        </nav>
-        
-        {/* Logo SKINALOGY */}
         <div className="hero-content">
           <h1 className="hero-logo">SKINALOGY</h1>
         </div>
@@ -57,20 +148,42 @@ const SearchpPage = () => {
       {/* Barre de recherche séparée */}
       <section className="search-section">
         <div className="search-container">
+          {/* Bouton filtre mobile */}
+          <button className="mobile-filter-btn" onClick={toggleMobileFilter}>
+            <span className="hamburger-line"></span>
+            <span className="hamburger-line"></span>
+            <span className="hamburger-line"></span>
+          </button>
+          
           <input 
             type="text" 
             placeholder="Recherchez ici..." 
             className="search-input"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              // Recherche en live sur le nom du produit
+              const value = e.target.value;
+              let filtered = products.filter(product => {
+                const price = product.prix || 0;
+                if (price < priceRange.min || price > priceRange.max) return false;
+                if (selectedCategories.length > 0 && !selectedCategories.includes(product.idCategorie)) return false;
+                if (selectedSkinTypes.length > 0 && !selectedSkinTypes.includes(product.idTypePeau)) return false;
+                if (value && !product.nom.toLowerCase().includes(value.toLowerCase())) return false;
+                return true;
+              });
+              setFilteredProducts(filtered);
+            }}
           />
-          <button className="search-button">🔍</button>
         </div>
       </section>
 
+      {/* Overlay pour fermer le filtre mobile */}
+      {isMobileFilterOpen && <div className="mobile-filter-overlay" onClick={toggleMobileFilter}></div>}
+
       <div className="shop-content">
         {/* Sidebar avec filtres */}
-        <aside className="filters-sidebar">
+        <aside className={`filters-sidebar ${isMobileFilterOpen ? 'mobile-open' : ''}`}>
           {/* Filtre Prix */}
           <div className="filter-section">
             <h3 className="filter-title" onClick={() => setIsPriceOpen(!isPriceOpen)}>
@@ -79,9 +192,22 @@ const SearchpPage = () => {
             {isPriceOpen && (
               <div className="price-range">
                 <div className="price-inputs">
-                  <input type="number" value="0" className="price-input" />
+                  <input 
+                    type="number" 
+                    value={priceRange.min} 
+                    className="price-input"
+                    onChange={(e) => setPriceRange(prev => ({ ...prev, min: parseInt(e.target.value) || 0 }))}
+                  />
                   <span>€ — </span>
-                  <input type="number" value="100" className="price-input" />
+                  <input 
+                    type="number" 
+                    value={priceRange.max === null || priceRange.max === undefined ? '' : priceRange.max}
+                    className="price-input"
+                    onChange={e => {
+                      const value = e.target.value;
+                      setPriceRange(prev => ({ ...prev, max: value === '' ? null : parseInt(value) }));
+                    }}
+                  />
                   <span>€</span>
                 </div>
               </div>
@@ -95,34 +221,19 @@ const SearchpPage = () => {
             </h3>
             {isCategoriesOpen && (
               <div className="filter-options">
-                <label className="filter-option">
-                  <input type="radio" name="category" className="filter-radio" />
-                  <span className="option-text">Crèmes hydratantes (5)</span>
-                </label>
-                <label className="filter-option">
-                  <input type="radio" name="category" className="filter-radio" />
-                  <span className="option-text">Crèmes solaires (2)</span>
-                </label>
-                <label className="filter-option">
-                  <input type="radio" name="category" className="filter-radio" />
-                  <span className="option-text">Sérums (3)</span>
-                </label>
-                <label className="filter-option">
-                  <input type="radio" name="category" className="filter-radio" />
-                  <span className="option-text">Toners (3)</span>
-                </label>
-                <label className="filter-option">
-                  <input type="radio" name="category" className="filter-radio" />
-                  <span className="option-text">Masques (2)</span>
-                </label>
-                <label className="filter-option">
-                  <input type="radio" name="category" className="filter-radio" />
-                  <span className="option-text">Démaquillants (2)</span>
-                </label>
-                <label className="filter-option">
-                  <input type="radio" name="category" className="filter-radio" />
-                  <span className="option-text">Crèmes pour les yeux (2)</span>
-                </label>
+                {categories.map((cat) => (
+                  <label className="filter-option" key={cat.id}>
+                    <input
+                      type="checkbox"
+                      className="filter-checkbox"
+                      checked={selectedCategories.includes(cat.id)}
+                      onChange={() => handleCategoryChange(cat.id)}
+                    />
+                    <span className="option-text">
+                      {cat.nom}
+                    </span>
+                  </label>
+                ))}
               </div>
             )}
           </div>
@@ -134,65 +245,77 @@ const SearchpPage = () => {
             </h3>
             {isSkinTypesOpen && (
               <div className="filter-options">
-                <label className="filter-option">
-                  <input type="radio" name="skintype" className="filter-radio" />
-                  <span className="option-text">Peau mixte (5)</span>
-                </label>
-                <label className="filter-option">
-                  <input type="radio" name="skintype" className="filter-radio" />
-                  <span className="option-text">Peau sèche (2)</span>
-                </label>
-                <label className="filter-option">
-                  <input type="radio" name="skintype" className="filter-radio" />
-                  <span className="option-text">Peau grasse (3)</span>
-                </label>
-                <label className="filter-option">
-                  <input type="radio" name="skintype" className="filter-radio" />
-                  <span className="option-text">Peau normal (3)</span>
-                </label>
+                {skinTypes.map((type) => (
+                  <label className="filter-option" key={type.id}>
+                    <input
+                      type="checkbox"
+                      className="filter-checkbox"
+                      checked={selectedSkinTypes.includes(type.id)}
+                      onChange={() => handleSkinTypeChange(type.id)}
+                    />
+                    <span className="option-text">
+                      {type.nom}
+                    </span>
+                  </label>
+                ))}
               </div>
             )}
           </div>
 
-          {/* Filtre Autres */}
-          <div className="filter-section">
-            <h3 className="filter-title" onClick={() => setIsOthersOpen(!isOthersOpen)}>
-              AUTRES <span className={`chevron ${isOthersOpen ? 'open' : ''}`}>▼</span>
-            </h3>
-            {isOthersOpen && (
-              <div className="filter-options">
-                <label className="filter-option">
-                  <input type="radio" name="others" className="filter-radio" />
-                  <span className="option-text">Coffret</span>
-                </label>
-              </div>
-            )}
+          {/* Boutons Filtrer et Réinitialiser */}
+          <div className="filter-actions">
+            <button className="filter-btn-Search apply-btn" onClick={handleApplyFilters}>
+              FILTRER
+            </button>
+            <button className="filter-btn-Search reset-btn" onClick={handleResetFilters}>
+              RÉINITIALISER
+            </button>
           </div>
         </aside>
 
         {/* Grille des produits */}
-        <main className="products-section">
-          <div className="products-grid">
-            {products.map(product => (
-              <div key={product.id} className="product-card">
-                <div className="product-image">
-                  <div className="placeholder-img"></div>
-                  <button className="add-btn">+</button>
+        <main className="products-section-Search">
+          {isLoading ? (
+            <div>Chargement des produits...</div>
+          ) : error ? (
+            <div style={{color: 'red'}}>{error}</div>
+          ) : (
+            <div className="products-grid">
+              {filteredProducts.map(product => (
+                <div key={product.id} className="product-card" onClick={() => handleProductClick(product.id)}>
+                  <h3 className="product-title-Search">{product.nom}</h3>
+                  <div className="product-image">
+                    {product.image ? (
+                      <img
+                        src={product.image}
+                        alt={product.nom}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
+                      />
+                    ) : null}
+                    <div
+                      className="placeholder-img"
+                      style={{ display: product.image ? 'none' : 'flex' }}
+                    ></div>
+                    <button className="add-btn" onClick={(e) => handleAddToCart(e, product)}>+</button>
+                  </div>
+                  <p className="product-price-Search">{product.prix}€</p>
                 </div>
-                <h3 className="product-title">{product.name}</h3>
-                <p className="product-price">{product.price}€</p>
-              </div>
-            ))}
-          </div>
+              ))}
+              {filteredProducts.length === 0 && !isLoading && (
+                <div style={{gridColumn: '1 / -1', textAlign: 'center', padding: '50px'}}>
+                  Aucun produit trouvé avec ces filtres.
+                </div>
+              )}
+            </div>
+          )}
         </main>
       </div>
 
       {/* Footer */}
-      <footer className="shop-footer">
-        <h2 className="footer-logo">SKINALOGY</h2>
-      </footer>
+      <Footer />
     </div>
   );
 };
 
-export default SearchpPage;
+export default SearchPage;

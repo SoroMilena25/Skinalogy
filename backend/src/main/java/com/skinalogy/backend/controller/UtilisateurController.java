@@ -2,6 +2,7 @@ package com.skinalogy.backend.controller;
 
 import com.skinalogy.backend.entity.Utilisateur;
 import com.skinalogy.backend.service.UtilisateurService;
+import com.skinalogy.backend.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,9 @@ public class UtilisateurController {
     
     @Autowired
     private UtilisateurService utilisateurService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
     
     // GET /api/utilisateurs - Récupérer tous les utilisateurs
     @GetMapping
@@ -67,12 +71,16 @@ public class UtilisateurController {
     public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
         String email = credentials.get("email");
         String password = credentials.get("password");
-        
+
         return utilisateurService.authenticate(email, password)
-                .map(utilisateur -> ResponseEntity.ok(Map.of(
-                    "message", "Connexion réussie",
-                    "utilisateur", utilisateur
-                )))
+                .map(utilisateur -> {
+                    String token = jwtUtil.generateToken(utilisateur.getEmail());
+                    return ResponseEntity.ok(Map.of(
+                        "message", "Connexion réussie",
+                        "utilisateur", utilisateur,
+                        "token", token
+                    ));
+                })
                 .orElse(ResponseEntity.badRequest().body(Map.of(
                     "error", "Email ou mot de passe incorrect"
                 )));

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './RegisterPage.css';
+import apiService from '../services/apiService';
+import Footer from './Footer';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -80,45 +82,31 @@ const RegisterPage = () => {
     setSuccessMessage('');
 
     try {
-      const response = await fetch('http://localhost:8080/api/utilisateurs', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          nom: formData.nom,
-          prenom: formData.prenom,
-          email: formData.email,
-          mdp: formData.password
-        }),
+      const data = await apiService.register({
+        nom: formData.nom,
+        prenom: formData.prenom,
+        email: formData.email,
+        mdp: formData.password
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setSuccessMessage('Inscription réussie ! Vous pouvez maintenant vous connecter.');
-        setFormData({
-          nom: '',
-          prenom: '',
-          email: '',
-          password: '',
-          confirmPassword: ''
-        });
-        
-        // Rediriger vers la page de connexion après 2 secondes
-        setTimeout(() => {
-          window.location.href = '/login';
-        }, 2000);
+      setSuccessMessage('Inscription réussie ! Vous pouvez maintenant vous connecter.');
+      setFormData({
+        nom: '',
+        prenom: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+      });
+      
+      setTimeout(() => {
+        window.location.href = '/connexion';
+      }, 2000);
+    } catch (data) {
+      if (data && data.error) {
+        setErrors({ general: data.error });
       } else {
-        if (data.error) {
-          setErrors({ general: data.error });
-        } else {
-          setErrors({ general: 'Une erreur est survenue lors de l\'inscription' });
-        }
+        setErrors({ general: 'Une erreur est survenue lors de l\'inscription' });
       }
-    } catch (error) {
-      console.error('Erreur lors de l\'inscription:', error);
-      setErrors({ general: 'Erreur de connexion au serveur' });
     } finally {
       setIsLoading(false);
     }
@@ -306,7 +294,7 @@ const RegisterPage = () => {
               <div style={{textAlign: 'center', marginTop: '20px'}}>
                 <p style={{fontSize: '14px'}}>
                   Déjà un compte ? 
-                  <a href="/login" style={{color: '#007bff', textDecoration: 'none', fontWeight: '500', marginLeft: '5px'}}>
+                  <a href="/connexion" style={{color: '#007bff', textDecoration: 'none', fontWeight: '500', marginLeft: '5px'}}>
                     Se connecter
                   </a>
                 </p>
@@ -328,11 +316,7 @@ const RegisterPage = () => {
       </section>
 
       {/* Section footer avec logo */}
-      <section className="register-footer">
-        <div className="footer-content">
-          <h2 className="footer-logo">SKINALOGY</h2>
-        </div>
-      </section>
+      <Footer />
     </div>
   );
 };

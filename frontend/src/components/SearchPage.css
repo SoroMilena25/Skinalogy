@@ -13,8 +13,10 @@
 
 /* Header */
 .shop-header {
-  background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), 
-              linear-gradient(135deg, #d4b8a3, #c4a484);
+  background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('../../public/logo/NavBar2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -101,20 +103,43 @@
   font-style: italic;
 }
 
-.search-button {
-  background: #8B4513;
+/* Bouton filtre mobile */
+.mobile-filter-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background: #582828;
   border: none;
-  color: white;
-  font-size: 16px;
+  border-radius: 8px;
   cursor: pointer;
-  padding: 12px 15px;
-  border-radius: 50%;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
-.search-button:hover {
-  background-color: #A0522D;
-  transform: scale(1.1);
+.mobile-filter-btn:hover {
+  background-color: #a04848;
+}
+
+.hamburger-line {
+  width: 20px;
+  height: 2px;
+  background-color: white;
+  margin: 2px 0;
+  transition: 0.3s;
+}
+
+/* Overlay pour mobile */
+.mobile-filter-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
 }
 
 /* Contenu principal */
@@ -122,7 +147,6 @@
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: 0;
-  max-width: 1400px;
   margin: 0 auto;
   background: white;
 }
@@ -130,9 +154,9 @@
 /* Sidebar des filtres */
 .filters-sidebar {
   background: white;
-  border-right: 1px solid #ddd;
   padding: 0;
   height: fit-content;
+  transition: transform 0.3s ease;
 }
 
 .filter-section {
@@ -216,10 +240,50 @@
   color: #8B4513;
 }
 
+/* Boutons filtrer et réinitialiser */
+.filter-actions {
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.filter-btn-Search {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+}
+
+.apply-btn {
+  background-color: #582828;
+  color: white;
+}
+
+.apply-btn:hover {
+  background-color: #a04848;
+}
+
+.reset-btn {
+  background-color: white;
+  color: #582828;
+  border: 2px solid #582828;
+}
+
+.reset-btn:hover {
+  background-color: #582828;
+  color: white;
+}
+
 /* Section des produits */
-.products-section {
+.products-section-Search {
   background: white;
   padding: 30px;
+  border-left: 1px solid #ddd;
 }
 
 .products-grid {
@@ -228,23 +292,27 @@
   gap: 30px;
 }
 
+/* STYLE INSPIRÉ DE HOMEPAGE */
 .product-card {
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease;
+  width: 100%;
+  cursor: pointer;
+  color: #582828;
 }
 
 .product-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
 
 .product-image {
   position: relative;
   height: 220px;
-  overflow: hidden;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .placeholder-img {
@@ -267,46 +335,48 @@
 
 .add-btn {
   position: absolute;
-  bottom: 15px;
-  right: 15px;
+  bottom: -15px;
+  right: -15px;
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #8B4513;
+  background-color: #582828;
   color: white;
   border: none;
   font-size: 20px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  transition: background-color 0.3s ease;
 }
 
 .add-btn:hover {
-  background-color: #A0522D;
-  transform: scale(1.1);
+  background-color: #a04848;
 }
 
-.product-title {
+.product-title-Search {
   font-size: 1.1rem;
   font-weight: 500;
-  color: #333;
-  padding: 15px 20px 5px;
+  color: #582828;
+  text-align: left;
+  margin: 10px 0 5px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   line-height: 1.3;
 }
 
-.product-price {
+.product-price-Search {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #8B4513;
-  padding: 0 20px 20px;
+  color: #582828;
+  text-align: left;
+  margin: 5px 0;
 }
 
 /* Footer */
 .shop-footer {
   background: linear-gradient(135deg, #d4a574, #c49580);
-  padding: 40px;
+  padding: 20px;
   text-align: center;
-  margin-top: 60px;
 }
 
 .footer-logo {
@@ -331,10 +401,10 @@
   }
 }
 
+/* RESPONSIVE MOBILE - iPhone 14, 12 Pro */
 @media (max-width: 768px) {
   .shop-nav {
-    flex-direction: column;
-    gap: 15px;
+    flex-direction: row;
   }
   
   .nav-left, .nav-right {
@@ -351,34 +421,92 @@
   }
   
   .search-container {
-    justify-content: center;
+    justify-content: space-between; /* Changé pour mobile */
+    flex-direction: row;
   }
   
   .search-input {
     width: 250px;
+    flex: 1;
+    margin-left: 10px;
+  }
+  
+  /* Afficher le bouton filtre mobile */
+  .mobile-filter-btn {
+    display: flex;
+  }
+  
+  /* Afficher l'overlay mobile */
+  .mobile-filter-overlay {
+    display: block;
   }
   
   .shop-content {
-    grid-template-columns: 1fr;
-    gap: 30px;
-    padding: 20px;
+    grid-template-columns: 1fr; /* Une seule colonne */
+    gap: 0;
+    padding: 0;
   }
   
+  /* Sidebar mobile coulissante */
   .filters-sidebar {
-    order: 2;
+    position: fixed;
+    top: 0;
+    left: -100%; /* Caché par défaut */
+    width: 80%;
+    max-width: 300px;
+    height: 100vh;
+    z-index: 999;
+    overflow-y: auto;
+    transform: translateX(0);
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
   }
   
-  .products-section {
+  .filters-sidebar.mobile-open {
+    left: 0; /* Visible quand ouvert */
+  }
+  
+  .products-section-Search {
     order: 1;
+    border-left: none;
+    padding: 20px 15px;
+    min-height: 24.5rem;
   }
   
+  /* Grid 2x2 pour mobile */
   .products-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
+    grid-template-columns: 1fr 1fr; /* 2 produits par ligne */
+    gap: 15px;
+    justify-items: start; /* Alignement à gauche */
+  }
+  
+  .product-card {
+    width: 100%;
+    max-width: 160px; /* Limite la largeur */
+  }
+  
+  .product-image {
+    height: 150px; /* Plus petit sur mobile */
+  }
+  
+  .product-title-Search {
+    font-size: 0.9rem;
+  }
+  
+  .product-price-Search {
+    font-size: 1rem;
+  }
+  
+  .add-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    bottom: -10px;
+    right: -10px;
   }
 }
 
-@media (max-width: 480px) {
+/* iPhone 14/12 Pro spécifique */
+@media (max-width: 430px) {
   .hero-logo {
     font-size: 3rem;
     letter-spacing: 3px;
@@ -395,7 +523,23 @@
   }
   
   .products-grid {
-    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .product-card {
+    max-width: 150px;
+  }
+  
+  .product-image {
+    height: 120px;
+  }
+  
+  .product-title-Search {
+    font-size: 0.8rem;
+  }
+  
+  .product-price-Search {
+    font-size: 0.9rem;
   }
   
   .filter-section {
@@ -403,6 +547,10 @@
   }
   
   .shop-header {
-    height: 35vh;
+    height: 30vh;
+  }
+  
+  .filters-sidebar {
+    width: 85%; /* Plus large sur très petits écrans */
   }
 }

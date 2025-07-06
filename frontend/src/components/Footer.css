@@ -1,0 +1,21 @@
+/* Footer.css */
+.footer {
+  background: linear-gradient(135deg, #d4a574, #c49580);
+  padding: 20px;
+  text-align: center;
+}
+
+.footer-logo {
+  font-size: 2.5rem;
+  color: white;
+  font-weight: bold;
+  letter-spacing: 4px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+@media (max-width: 480px) {
+  .footer-logo {
+    font-size: 2rem;
+    letter-spacing: 3px;
+  }
+}
