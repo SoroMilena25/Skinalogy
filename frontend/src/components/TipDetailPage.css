@@ -1,0 +1,345 @@
+/* TipDetailPage.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: #582828;
+}
+
+.tip-detail-page {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f8f8f8;
+}
+
+/* Header identique à ProductPage */
+.tip-detail-header {
+  background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('../../public/logo/NavBar2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 40vh;
+  padding: 25px 40px;
+}
+
+.hero-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-grow: 1;
+}
+
+.hero-logo {
+  font-size: 4.5rem;
+  font-weight: bold;
+  color: white;
+  letter-spacing: 6px;
+  text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+}
+
+/* Section principale */
+.tip-detail-main {
+  background: white;
+  padding: 40px;
+}
+
+.tip-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Bouton retour */
+.back-button {
+  background: none;
+  border: 2px solid #582828;
+  color: #582828;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 30px;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background: #582828;
+  color: white;
+}
+
+/* Titre de l'astuce */
+.tip-detail-title {
+  font-size: 2.5rem;
+  color: #582828;
+  font-weight: bold;
+  margin-bottom: 40px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Contenu principal */
+.tip-detail-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+/* Section image */
+.tip-detail-image-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tip-detail-image {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.tip-detail-image-placeholder {
+  width: 100%;
+  max-width: 500px;
+  height: 400px;
+  background: linear-gradient(135deg, #ffeaa7, #fdcb6e, #e17055);
+  background-size: 300% 300%;
+  animation: gradientMove 8s ease infinite;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.tip-detail-image-placeholder::before {
+  content: "Image astuce";
+}
+
+/* Section informations */
+.tip-detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.tip-detail-text {
+  flex: 1;
+}
+
+.tip-description {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #555;
+  text-align: left;
+}
+
+.tip-description h3 {
+  color: #582828;
+  margin: 25px 0 15px 0;
+  font-size: 1.3rem;
+}
+
+.tip-description p {
+  margin-bottom: 15px;
+}
+
+.tip-description ul, .tip-description ol {
+  margin: 15px 0;
+  padding-left: 30px;
+}
+
+.tip-description li {
+  margin-bottom: 8px;
+}
+
+.product-section-title {
+  font-size: 1.5rem;
+  color: #582828;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Produit associé style HomePage */
+.associated-product-home-style {
+  background: #f8f8f8;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.product-cardHome-detail {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.product-cardHome-detail:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+.product-cardHome-detail .product-imageHome {
+  position: relative;
+  height: 250px;
+}
+
+.product-cardHome-detail .product-imageHome img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-cardHome-detail .placeholder-imgHome {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 14px;
+  position: relative;
+}
+
+.product-cardHome-detail .placeholder-imgHome::before {
+  content: "Image produit";
+  position: absolute;
+  color: #999;
+}
+
+.product-cardHome-detail .add-btnHome {
+  position: absolute;
+  bottom: -15px;
+  right: -15px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #582828;
+  color: white;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.product-cardHome-detail .add-btnHome:hover {
+  background-color: #a04848;
+}
+
+.product-cardHome-detail .product-titleHome {
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-align: center;
+  margin: 15px 10px 5px 10px;
+  color: #582828;
+}
+
+.product-cardHome-detail .product-priceHome {
+  font-size: 1.4rem;
+  font-weight: bold;
+  text-align: center;
+  margin: 5px 10px 15px 10px;
+  color: #582828;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .tip-detail-content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .tip-detail-image-section {
+    order: -1;
+  }
+  
+  .product-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .product-info {
+    align-items: center;
+  }
+  
+  .add-to-cart-btn {
+    align-self: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .tip-detail-main {
+    padding: 30px 20px;
+  }
+  
+  .tip-detail-title {
+    font-size: 2rem;
+  }
+  
+  .hero-logo {
+    font-size: 3.5rem;
+    letter-spacing: 4px;
+  }
+  
+  .tip-detail-content {
+    gap: 30px;
+  }
+  
+  .associated-product {
+    padding: 20px;
+  }
+  
+  .product-card {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-logo {
+    font-size: 3rem;
+    letter-spacing: 3px;
+  }
+  
+  .tip-detail-header {
+    height: 30vh;
+  }
+  
+  .tip-detail-title {
+    font-size: 1.8rem;
+  }
+  
+  .tip-description {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  
+  .back-button {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+}

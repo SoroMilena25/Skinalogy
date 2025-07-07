@@ -12,7 +12,7 @@ public class Facture {
     @Column(name = "Id")
     private Integer id;
     
-    @Column(name = "datePaiement", nullable = false)
+    @Column(name = "date_paiement", nullable = false)  // ← Utiliser date_paiement au lieu de datePaiement
     private LocalDateTime datePaiement;
     
     @Column(name = "total", nullable = false)

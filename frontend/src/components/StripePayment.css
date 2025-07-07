@@ -1,0 +1,189 @@
+/* StripePayment.css */
+.stripe-payment-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.stripe-payment-modal {
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.payment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.payment-header h3 {
+  color: #8B4513;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #999;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background: #f5f5f5;
+  color: #8B4513;
+}
+
+.payment-amount {
+  text-align: center;
+  margin-bottom: 25px;
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  border-left: 4px solid #8B4513;
+}
+
+.payment-amount span {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #8B4513;
+}
+
+.payment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card-element-container {
+  padding: 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  background: white;
+  transition: border-color 0.3s ease;
+}
+
+.card-element-container:focus-within {
+  border-color: #8B4513;
+  box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
+}
+
+.error-message {
+  color: #e74c3c;
+  background: #fdf2f2;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #f8d7da;
+  font-size: 14px;
+  text-align: center;
+}
+
+.payment-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.cancel-btn {
+  flex: 1;
+  padding: 12px 20px;
+  border: 2px solid #8B4513;
+  background: white;
+  color: #8B4513;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+  background: #8B4513;
+  color: white;
+}
+
+.pay-btn {
+  flex: 2;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #8B4513, #A0522D);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pay-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #A0522D, #8B4513);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(139, 69, 19, 0.3);
+}
+
+.pay-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.test-card-info {
+  margin-top: 20px;
+  padding: 15px;
+  background: #e8f4f8;
+  border-radius: 8px;
+  border-left: 4px solid #3498db;
+  text-align: center;
+}
+
+.test-card-info small {
+  color: #2c3e50;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.test-card-info strong {
+  color: #3498db;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .stripe-payment-modal {
+    margin: 20px;
+    padding: 25px;
+  }
+  
+  .payment-header h3 {
+    font-size: 1.3rem;
+  }
+  
+  .payment-actions {
+    flex-direction: column;
+  }
+  
+  .cancel-btn,
+  .pay-btn {
+    flex: none;
+  }
+}

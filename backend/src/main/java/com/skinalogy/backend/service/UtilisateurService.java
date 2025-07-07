@@ -118,4 +118,14 @@ public class UtilisateurService {
     public String hashPassword(String rawPassword) {
         return passwordEncoder.encode(rawPassword);
     }
+
+    // Trouver un utilisateur par ID
+    public Optional<Utilisateur> findById(Integer id) {
+        return utilisateurRepository.findById(id);
+    }
+
+    // Sauvegarder un utilisateur
+    public Utilisateur save(Utilisateur utilisateur) {
+        return utilisateurRepository.save(utilisateur);
+    }
 }

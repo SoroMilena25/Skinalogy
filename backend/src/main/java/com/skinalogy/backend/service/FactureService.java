@@ -60,7 +60,7 @@ public class FactureService {
     // Créer une nouvelle facture
     public Facture createFacture(Facture facture) {
         if (facture.getDatePaiement() == null) {
-            facture.setDatePaiement(LocalDateTime.now());
+            facture.setDatePaiement(LocalDateTime.now());  // ← Toujours mettre la date actuelle
         }
         return factureRepository.save(facture);
     }

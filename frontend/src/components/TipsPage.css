@@ -216,6 +216,20 @@
   text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
+/* Header avec image de fond comme ProductPage */
+.tips-header {
+  background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('../../public/logo/NavBar2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 40vh;
+  padding: 25px 40px;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .tips-grid {

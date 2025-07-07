@@ -1,0 +1,379 @@
+/* ProfilePage.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: #582828;
+}
+
+body {
+  font-family: 'Inria Sans', sans-serif;
+  line-height: 1.6;
+}
+
+.profile-page {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hero Section - identique à HomePage */
+.profile-hero {
+  height: 40vh;
+  min-height: 300px;
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('../../public/logo/NavBar2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 40px;
+  position: relative;
+}
+
+.hero-content {
+  max-width: 600px;
+}
+
+.hero-title {
+  font-size: 8rem;
+  font-weight: bold;
+  color: white;
+  letter-spacing: 4px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+/* Section principale */
+.profile-main {
+  flex: 1;
+  background-color: #f8f8f8;
+  padding: 60px 40px;
+}
+
+.profile-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.profile-title {
+  font-size: 4rem;
+  font-weight: bold;
+  margin-bottom: 50px;
+  letter-spacing: 2px;
+  text-align: left;
+  color: #582828;
+}
+
+/* Sections du profil */
+.profile-sections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+/* Section informations personnelles */
+.personal-info-section {
+  background: white;
+  border-radius: 15px;
+  padding: 40px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #582828;
+  border-bottom: 3px solid #582828;
+  padding-bottom: 10px;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: 1rem;
+  color: #582828;
+  font-weight: 600;
+}
+
+.form-input {
+  padding: 12px 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #fafafa;
+  transition: all 0.3s ease;
+  color: #582828;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #582828;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(88, 40, 40, 0.1);
+}
+
+.update-button {
+  background: linear-gradient(135deg, #582828, #a04848);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.update-button:hover {
+  background: linear-gradient(135deg, #a04848, #582828);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(88, 40, 40, 0.3);
+}
+
+.update-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Section historique des commandes */
+.order-history-section {
+  background: white;
+  border-radius: 15px;
+  padding: 40px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.order-card {
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  background: #fafafa;
+}
+
+.order-card:hover {
+  border-color: #582828;
+  box-shadow: 0 4px 10px rgba(88, 40, 40, 0.1);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.order-info h3 {
+  color: #582828;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.order-date {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.order-total {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #582828;
+}
+
+.order-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.item-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.item-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #e0e0e0;
+}
+
+.item-details h4 {
+  color: #582828;
+  font-size: 1rem;
+  margin-bottom: 2px;
+}
+
+.item-quantity {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.item-price {
+  font-weight: bold;
+  color: #582828;
+}
+
+/* Messages d'état */
+.loading-message, .error-message, .no-orders-message {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+}
+
+.loading-message {
+  color: #666;
+}
+
+.error-message {
+  color: #dc3545;
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+}
+
+.no-orders-message {
+  color: #666;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+}
+
+/* Message de succès */
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  border: 1px solid #c3e6cb;
+}
+
+/* Message d'erreur pour le formulaire */
+.form-error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  border: 1px solid #f5c6cb;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .profile-sections {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .hero-title {
+    font-size: 6rem;
+  }
+  
+  .profile-title {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-main {
+    padding: 40px 20px;
+  }
+  
+  .hero-title {
+    font-size: 4rem;
+  }
+  
+  .profile-title {
+    font-size: 2.5rem;
+    text-align: center;
+  }
+  
+  .personal-info-section,
+  .order-history-section {
+    padding: 30px 20px;
+  }
+  
+  .section-title {
+    font-size: 1.7rem;
+  }
+  
+  .order-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .order-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .item-info {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    height: 30vh;
+    padding-left: 20px;
+  }
+  
+  .hero-title {
+    font-size: 3rem;
+    letter-spacing: 2px;
+  }
+  
+  .profile-main {
+    padding: 30px 15px;
+  }
+  
+  .profile-title {
+    font-size: 2rem;
+  }
+  
+  .personal-info-section,
+  .order-history-section {
+    padding: 25px 15px;
+  }
+}

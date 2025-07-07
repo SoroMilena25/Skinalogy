@@ -14,6 +14,8 @@ import UsersPage from './components/UsersPage';
 import ProductAdminPage from './components/ProductAdminPage';
 import ProductAdminDetailPage from './components/ProductAdminDetailPage';
 import IdeasPage from './components/IdeasPage';
+import ProfilePage from './components/ProfilePage';
+import TipDetailPage from './components/TipDetailPage';
 import './App.css';
 
 function App() {
@@ -35,6 +37,8 @@ function App() {
           <Route path="/produitsAdmin" element={<ProductAdminPage />} />
           <Route path="/produitsDetailAdmin" element={<ProductAdminDetailPage />} />
           <Route path="/idees" element={<IdeasPage />} />
+          <Route path="/profil" element={<ProfilePage />} />
+          <Route path="/astuce/:id" element={<TipDetailPage />} />
         </Routes>
       </div>
     </Router>

@@ -1,21 +1,78 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import './CartPage.css';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import StripePayment from './StripePayment';
 import { useCart } from '../hooks/useCart';
 
+// Remplace par ta vraie clé publique Stripe (pk_test_...)
+const stripePromise = loadStripe('pk_test_51RiFrTBGnhaIcuSbWV3LaC2F6TMv5XAsoXMUVPRCo6qbYn0ACSxHzEuEMy6Af1roQCivCRGXgwHWUxSi2cvncgwB00UQVwjYAp');
+
 const CartPage = () => {
-  const { cart, cartTotal, updateQuantity, removeFromCart } = useCart();
+  const { cart, cartTotal, updateQuantity, removeFromCart, clearCart } = useCart();
+  const [showPayment, setShowPayment] = useState(false);
+
+  // Fonction pour récupérer l'ID utilisateur depuis localStorage
+  const getCurrentUserId = () => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      try {
+        return JSON.parse(user).id;
+      } catch (e) {
+        console.error('Erreur parsing user localStorage:', e);
+        return null;
+      }
+    }
+    return null;
+  };
 
   const handlePayment = () => {
     if (cart.length === 0) {
       alert('Votre panier est vide');
       return;
     }
+
+    // Vérifier qu'un utilisateur est connecté
+    const userId = getCurrentUserId();
+    if (!userId) {
+      alert('Vous devez être connecté pour passer commande');
+      // Optionnel : rediriger vers la page de connexion
+      // window.location.href = '/login';
+      return;
+    }
     
-    // Ici tu peux implémenter ta logique de paiement
-    console.log('Procéder au paiement pour:', cart);
-    alert('Redirection vers le paiement...');
+    // Debug pour voir la structure du panier
+    console.log('🔍 Structure du panier:');
+    cart.forEach((item, index) => {
+      console.log(`Item ${index}:`, {
+        id: item.id,
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price
+      });
+      console.log(`Types: id=${typeof item.id}, quantity=${typeof item.quantity}, price=${typeof item.price}`);
+    });
+    
+    console.log('🔍 Utilisateur connecté ID:', userId);
+    
+    setShowPayment(true);
+  };
+
+  const handlePaymentSuccess = (paymentIntent, factureId) => {
+    console.log('Paiement réussi:', paymentIntent);
+    console.log('Facture créée:', factureId);
+
+    clearCart();
+
+    alert(`Paiement réussi ! Facture n°${factureId} créée. Merci pour votre commande.`);
+    setShowPayment(false);
+    // Ici tu peux vider le panier ou rediriger vers une page de confirmation
+  };
+
+  const handlePaymentCancel = () => {
+    setShowPayment(false);
   };
 
   const formatPrice = (price) => {
@@ -147,7 +204,7 @@ const CartPage = () => {
                   </div>
                   
                   <button className="payment-btn" onClick={handlePayment}>
-                    Payer
+                    Payer avec Stripe
                   </button>
                   
                   {/* Logo Skinalogy dans le récapitulatif */}
@@ -163,6 +220,19 @@ const CartPage = () => {
           )}
         </div>
       </main>
+
+      {/* Modal de paiement Stripe - CORRIGÉ avec userId dynamique */}
+      {showPayment && (
+        <Elements stripe={stripePromise}>
+          <StripePayment
+            amount={cartTotal}
+            cart={cart}
+            userId={getCurrentUserId()} // ← Plus de valeur en dur !
+            onSuccess={handlePaymentSuccess}
+            onCancel={handlePaymentCancel}
+          />
+        </Elements>
+      )}
 
       {/* Footer */}
       <Footer />

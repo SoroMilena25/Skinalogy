@@ -59,9 +59,12 @@ const LoginPage = () => {
     setErrors({});
 
     try {
+      console.log('🔍 Tentative de connexion avec:', { email: formData.email });
       const data = await apiService.login(formData.email, formData.password);
+      console.log('✅ Réponse reçue:', data);
 
       if (data) {
+        
         // Sauvegarder le token JWT
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.utilisateur));
@@ -75,6 +78,7 @@ const LoginPage = () => {
         setErrors({ general: 'Une erreur est survenue lors de la connexion' });
       }
     } catch (data) {
+      console.error('❌ Erreur complète:', data);
       if (data && data.error) {
         setErrors({ general: data.error });
       } else {
