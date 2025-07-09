@@ -100,7 +100,6 @@
   width: 100%;
   max-width: 500px;
   height: auto;
-  border-radius: 15px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }
 
@@ -330,12 +329,14 @@
   }
   
   .tip-detail-title {
-    font-size: 1.8rem;
+    font-size: 1.4rem;
+    text-align: left;
   }
   
   .tip-description {
     font-size: 1rem;
     line-height: 1.6;
+    margin-top: 0px!important;
   }
   
   .back-button {

@@ -11,26 +11,26 @@ import java.util.List;
 @Repository
 public interface FactureRepository extends JpaRepository<Facture, Integer> {
     
-    // Récupérer les factures par date (entre deux dates)
     List<Facture> findByDatePaiementBetween(LocalDateTime startDate, LocalDateTime endDate);
     
-    // Récupérer les factures triées par date décroissante (plus récentes en premier)
+    List<Facture> findAllByOrderByDatePaiementAsc();
+
     List<Facture> findAllByOrderByDatePaiementDesc();
     
-    // Récupérer les factures triées par montant décroissant
     List<Facture> findAllByOrderByTotalDesc();
     
-    // Récupérer les factures supérieures à un montant
     List<Facture> findByTotalGreaterThan(Double montant);
     
-    // Récupérer les factures inférieures à un montant
     List<Facture> findByTotalLessThan(Double montant);
     
-    // Calculer le total des ventes sur une période
     @Query("SELECT SUM(f.total) FROM Facture f WHERE f.datePaiement BETWEEN :startDate AND :endDate")
     Double getTotalVentesPeriode(LocalDateTime startDate, LocalDateTime endDate);
     
-    // Compter le nombre de factures sur une période
     @Query("SELECT COUNT(f) FROM Facture f WHERE f.datePaiement BETWEEN :startDate AND :endDate")
     Long countFacturesPeriode(LocalDateTime startDate, LocalDateTime endDate);
+    
+    @Query("SELECT FUNCTION('MONTH', f.datePaiement) as mois, COUNT(f) as nombre FROM Facture f WHERE FUNCTION('YEAR', f.datePaiement) = :annee GROUP BY mois ORDER BY mois")
+    List<Object[]> countFacturesByMonth(int annee);
+
+
 }

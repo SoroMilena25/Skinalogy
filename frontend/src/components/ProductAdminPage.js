@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './ProductAdminPage.css';
+import Navbar from './Navbar';
+import ApiService from '../services/apiService';
+import { useNavigate } from 'react-router-dom';
 
 const ProductAdminPage = () => {
   const [filters, setFilters] = useState({
-    priceMin: 0,
-    priceMax: 100,
     name: '',
     skinType: '',
     category: ''
@@ -13,26 +14,35 @@ const ProductAdminPage = () => {
   const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
 
-  // Données des produits
-  const [products] = useState([
-    {
-      id: 1,
-      name: 'Sérum - Acide hyaluronique',
-      price: 12.75,
-      category: 'Sérum',
-      skinType: 'Peau sèche'
-    },
-    {
-      id: 2,
-      name: 'Crème hydratante smooth',
-      price: 14.50,
-      category: 'Crème hydratante',
-      skinType: 'Peau sèche, peau normal'
-    }
-  ]);
+  const [products, setProducts] = useState([]);
+  const [productsOrigin, setProductsOrigin] = useState([]);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    ApiService.getAllProduits().then(data => {
+      setProducts(data);
+      setProductsOrigin(data);
+    });
+  }, []);
 
   const skinTypes = ['Peau sèche', 'Peau grasse', 'Peau mixte', 'Peau normale', 'Peau sensible'];
   const categories = ['Sérum', 'Crème hydratante', 'Crème solaire', 'Masque', 'Démaquillant'];
+
+  const skinTypesMap = {
+    1: 'Peau sèche',
+    2: 'Peau grasse',
+    3: 'Peau mixte',
+    4: 'Peau normale',
+    5: 'Peau sensible'
+  };
+  const categoriesMap = {
+    1: 'Sérum',
+    2: 'Crème hydratante',
+    3: 'Crème solaire',
+    4: 'Masque',
+    5: 'Démaquillant'
+  };
 
   const handleFilterChange = (field, value) => {
     setFilters(prev => ({
@@ -42,11 +52,27 @@ const ProductAdminPage = () => {
   };
 
   const handleFilter = () => {
-    console.log('Filtrer avec:', filters);
+    let filtered = productsOrigin;
+    if (filters.name) {
+      filtered = filtered.filter(p => p.nom.toLowerCase().includes(filters.name.toLowerCase()));
+    }
+    if (filters.skinType) {
+      filtered = filtered.filter(p => {
+        return (p.typePeau && p.typePeau.toLowerCase() === filters.skinType.toLowerCase()) ||
+               (p.idTypePeau && skinTypesMap[p.idTypePeau] && skinTypesMap[p.idTypePeau] === filters.skinType);
+      });
+    }
+    if (filters.category) {
+      filtered = filtered.filter(p => {
+        return (p.categorie && p.categorie.toLowerCase() === filters.category.toLowerCase()) ||
+               (p.idCategorie && categoriesMap[p.idCategorie] && categoriesMap[p.idCategorie] === filters.category);
+      });
+    }
+    setProducts(filtered);
   };
 
   const handleConsult = (productId) => {
-    console.log('Consulter produit:', productId);
+    navigate(`/produitsAdmin/${productId}`);
   };
 
   const handleSkinTypeSelect = (type) => {
@@ -59,39 +85,37 @@ const ProductAdminPage = () => {
     setIsCategoryDropdownOpen(false);
   };
 
+  const handleReset = () => {
+    setFilters({ name: '', skinType: '', category: '' });
+    setProducts(productsOrigin);
+  };
+
   return (
     <div className="products-page">
-      {/* Header */}
-      <header className="products-header">
+      <Navbar />
+      <header className="products-header" style={{ paddingTop: '60px' }}>
         <div className="header-content">
           <div className="header-left">
             <h1 className="products-logo">SKINALOGY</h1>
             <span className="products-subtitle">Portail - Administrateur</span>
           </div>
-          <div className="header-right">
-            <button className="logout-btn">DECONNEXION</button>
-          </div>
         </div>
       </header>
 
-      {/* Navigation */}
       <nav className="products-nav">
         <div className="nav-items">
-          <a href="#dashboard" className="nav-item">DASHBOARD</a>
-          <a href="#commandes" className="nav-item">COMMANDES</a>
-          <a href="#utilisateurs" className="nav-item">UTILISATEURS</a>
-          <a href="#produits" className="nav-item active">PRODUITS</a>
-          <a href="#idees" className="nav-item">IDEES</a>
+          <a href="/dashboard" className="nav-item">DASHBOARD</a>
+          <a href="/commandes" className="nav-item">COMMANDES</a>
+          <a href="/users" className="nav-item">UTILISATEURS</a>
+          <a href="/produitsAdmin" className="nav-item active">PRODUITS</a>
         </div>
       </nav>
 
-      {/* Contenu principal */}
       <main className="products-main">
         <div className="products-container">
           <h2 className="page-title">GESTION DES PRODUITS</h2>
           
           <div className="products-content">
-            {/* Tableau des produits */}
             <div className="products-table-section">
               <table className="products-table">
                 <thead>
@@ -114,14 +138,13 @@ const ProductAdminPage = () => {
                           <div className="consult-icon"></div>
                         </button>
                       </td>
-                      <td>{product.name}</td>
-                      <td>{product.price}€</td>
-                      <td>{product.category}</td>
-                      <td>{product.skinType}</td>
+                      <td>{product.nom}</td>
+                      <td>{product.prix}€</td>
+                      <td>{product.idCategorie}</td>
+                      <td>{product.idTypePeau}</td>
                     </tr>
                   ))}
-                  {/* Lignes vides pour compléter le tableau */}
-                  {Array.from({ length: 8 }, (_, index) => (
+                  {products.length < 13 && Array.from({ length: 13 - products.length }, (_, index) => (
                     <tr key={`empty-${index}`} className="empty-row">
                       <td></td>
                       <td></td>
@@ -133,36 +156,12 @@ const ProductAdminPage = () => {
                 </tbody>
               </table>
               
-              {/* Pagination */}
               <div className="pagination">
                 <span className="pagination-arrow">&gt;&gt;</span>
               </div>
             </div>
 
-            {/* Panneau de filtres */}
             <div className="filters-panel">
-              <div className="filter-group">
-                <label className="filter-label">Prix</label>
-                <div className="price-range">
-                  <div className="price-inputs">
-                    <input 
-                      type="number" 
-                      value={filters.priceMin} 
-                      className="price-input"
-                      onChange={(e) => handleFilterChange('priceMin', e.target.value)}
-                    />
-                    <span className="price-separator">€ — </span>
-                    <input 
-                      type="number" 
-                      value={filters.priceMax} 
-                      className="price-input"
-                      onChange={(e) => handleFilterChange('priceMax', e.target.value)}
-                    />
-                    <span className="price-currency">€</span>
-                  </div>
-                </div>
-              </div>
-
               <div className="filter-group">
                 <label className="filter-label">Nom</label>
                 <input
@@ -225,9 +224,16 @@ const ProductAdminPage = () => {
                 </div>
               </div>
 
-              <button className="filter-btn" onClick={handleFilter}>
-                <span className="filter-text">Filtrer</span>
-                <span className="filter-icon">🔍</span>
+              <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
+                <button className="filter-btn" onClick={handleFilter}>
+                  <span className="filter-text">Filtrer</span>
+                </button>
+                <button className="filter-btn" style={{ background: '#eee', color: '#333' }} onClick={handleReset}>
+                  <span className="filter-text">Réinitialiser</span>
+                </button>
+              </div>
+              <button className="filter-btn insert-btn" style={{ marginTop: 18, width: '100%' }} onClick={() => navigate('/produitsAdmin/insert')}>
+                + INSÉRER UN PRODUIT
               </button>
             </div>
           </div>

@@ -77,7 +77,7 @@ body {
 }
 
 /* Section commune */
-.section-title {
+.section-title-Home {
   font-size: 4rem;
   font-weight: bold;
   margin-bottom: 20px;
@@ -402,7 +402,7 @@ body {
     height: 400px;
   }
   
-  .section-title {
+  .section-title-Home {
     font-size: 3rem;
     text-align: left;
   }
@@ -539,7 +539,7 @@ body {
   }
   
   /* Sections */
-  .section-title {
+  .section-title-Home {
     font-size: 2.5rem;
     text-align: center;
   }
@@ -576,6 +576,7 @@ body {
     padding-left: 15px;
   }
   
+
   .hero-title {
     font-size: 2.5rem;
     letter-spacing: 2px;
@@ -613,7 +614,7 @@ body {
     font-size: 1.1rem;
   }
   
-  .section-title {
+  .section-title-Home {
     font-size: 2rem;
     text-align: left;
   }

@@ -13,9 +13,11 @@ import OrderDetailPage from './components/OrderDetailPage';
 import UsersPage from './components/UsersPage';
 import ProductAdminPage from './components/ProductAdminPage';
 import ProductAdminDetailPage from './components/ProductAdminDetailPage';
+import ProductAdminDetailInsertPage from './components/ProductAdminDetailInsertPage';
 import IdeasPage from './components/IdeasPage';
 import ProfilePage from './components/ProfilePage';
 import TipDetailPage from './components/TipDetailPage';
+import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
 function App() {
@@ -23,22 +25,75 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
+
           <Route path="/" element={<HomePage />} />
-          <Route path="/connexion" element={<LoginPage />} />
-          <Route path="/inscription" element={<RegisterPage />} />
           <Route path="/recherche" element={<SearchPage />} />
           <Route path="/produit/:id" element={<ProductPage />} />
           <Route path="/panier" element={<CartPage />} />
           <Route path="/astuces" element={<TipsPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/commandes" element={<OrdersPage />} />
-          <Route path="/commandesDetail" element={<OrderDetailPage />} />
-          <Route path="/users" element={<UsersPage />} />
-          <Route path="/produitsAdmin" element={<ProductAdminPage />} />
-          <Route path="/produitsDetailAdmin" element={<ProductAdminDetailPage />} />
-          <Route path="/idees" element={<IdeasPage />} />
-          <Route path="/profil" element={<ProfilePage />} />
+          <Route path="/idees" element={
+            <ProtectedRoute allowedRoles={[1]}>
+              <IdeasPage />
+            </ProtectedRoute>
+          } />
           <Route path="/astuce/:id" element={<TipDetailPage />} />
+
+
+          <Route path="/connexion" element={
+            <ProtectedRoute onlyAnonymous={true}>
+              <LoginPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/inscription" element={
+            <ProtectedRoute onlyAnonymous={true}>
+              <RegisterPage />
+            </ProtectedRoute>
+          } />
+
+ 
+          <Route path="/profil" element={
+            <ProtectedRoute allowedRoles={[0, 1]}>
+              <ProfilePage />
+            </ProtectedRoute>
+          } />
+
+          
+          <Route path="/dashboard" element={
+            <ProtectedRoute allowedRoles={[1]}>
+              <DashboardPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/commandes" element={
+            <ProtectedRoute allowedRoles={[1]}>
+              <OrdersPage />
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/users" element={
+            <ProtectedRoute allowedRoles={[1]}>
+              <UsersPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/produitsAdmin" element={
+            <ProtectedRoute allowedRoles={[1]}>
+              <ProductAdminPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/produitsAdmin/insert" element={
+            <ProtectedRoute allowedRoles={[1]}>
+              <ProductAdminDetailInsertPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/produitsAdmin/:id" element={
+            <ProtectedRoute allowedRoles={[1]}>
+              <ProductAdminDetailPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/order/:orderNumber" element={
+            <ProtectedRoute allowedRoles={[1]}>
+              <OrderDetailPage />
+            </ProtectedRoute>
+          } />
         </Routes>
       </div>
     </Router>

@@ -19,23 +19,22 @@ const TipsPage = () => {
         const astucesData = await apiService.getAllAstuces();
         console.log('Astuces récupérées:', astucesData);
         
-        // Pour chaque astuce, récupérer l'image du produit si pas d'image astuce
         const astucesWithProduitImages = await Promise.all(
           astucesData.map(async (astuce) => {
-            // Si l'astuce a une image directe, l'utiliser
+
             if (astuce.image) {
               return {
                 ...astuce,
-                imageToDisplay: astuce.image // Image de l'astuce
+                imageToDisplay: astuce.image 
               };
             }
-            // Sinon, si elle a un idProduit, récupérer l'image du produit
+
             else if (astuce.idProduit) {
               try {
                 const produit = await apiService.getProduitById(astuce.idProduit);
                 return {
                   ...astuce,
-                  imageToDisplay: produit.image, // Image du produit
+                  imageToDisplay: produit.image, 
                   produitAssocie: produit
                 };
               } catch (error) {
@@ -46,7 +45,7 @@ const TipsPage = () => {
                 };
               }
             }
-            // Sinon, pas d'image
+
             else {
               return {
                 ...astuce,
@@ -106,10 +105,9 @@ const TipsPage = () => {
   return (
     <div className="tips-page">
       <Navbar />
-      
-      {/* Header avec image de fond comme ProductPage */}
+
       <header className="tips-header">
-        {/* Logo SKINALOGY cliquable */}
+
         <div className="hero-content">
           <h1 className="hero-logo" onClick={handleHomeClick} style={{ cursor: 'pointer' }}>
             SKINALOGY
@@ -117,10 +115,10 @@ const TipsPage = () => {
         </div>
       </header>
 
-      {/* Section principale des astuces */}
+
       <main className="tips-main">
         <div className="tips-container">
-          {/* Titre de la section */}
+
           <h2 className="tips-title">NOS ASTUCES BEAUTES</h2>
           
           {astucesWithImages.length === 0 ? (
@@ -130,7 +128,7 @@ const TipsPage = () => {
               </p>
             </div>
           ) : (
-            /* Grille des astuces */
+
             <div className="tips-grid">
               {astucesWithImages.map((astuce, index) => (
                 <div 
@@ -165,8 +163,7 @@ const TipsPage = () => {
                   </div>
                 </div>
               ))}
-              
-              {/* Si moins de 5 astuces, remplir avec des placeholders */}
+
               {Array.from({ length: Math.max(0, 5 - astucesWithImages.length) }).map((_, index) => (
                 <div 
                   key={`placeholder-${index}`} 

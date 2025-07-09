@@ -403,6 +403,20 @@
 
 /* RESPONSIVE MOBILE - iPhone 14, 12 Pro */
 @media (max-width: 768px) {
+  .shop-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .shop-content {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .shop-footer {
+    flex-shrink: 0;
+  }
+  
   .shop-nav {
     flex-direction: row;
   }

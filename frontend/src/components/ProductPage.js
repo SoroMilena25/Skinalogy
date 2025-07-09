@@ -44,14 +44,6 @@ const ProductPage = () => {
         prix: produit.prix,
         image: produit.image
       });
-      
-      // Si l'ajout a réussi, proposer d'aller au panier
-      if (success) {
-        const goToCart = window.confirm('Produit ajouté au panier ! Voulez-vous voir votre panier ?');
-        if (goToCart) {
-          navigate('/panier');
-        }
-      }
     }
   };
 
@@ -90,7 +82,6 @@ const ProductPage = () => {
     <div className="product-page">
       <Navbar />
       <header className="product-header">
-        {/* Logo SKINALOGY cliquable pour retour accueil */}
         <div className="hero-content">
           <h1 className="hero-logo" onClick={handleHomeClick} style={{ cursor: 'pointer' }}>
             SKINALOGY
@@ -98,14 +89,11 @@ const ProductPage = () => {
         </div>
       </header>
 
-      {/* Section principale du produit */}
       <main className="product-main">
         <div className="product-container">
-          {/* Titre du produit centré */}
           <h2 className="product-title">{produit.nom}</h2>
           
           <div className="product-content">
-            {/* Image du produit avec prix en dessous */}
             <div className="product-image-section">
               {produit.image ? (
                 <img 
@@ -129,13 +117,11 @@ const ProductPage = () => {
                 style={{ display: produit.image ? 'none' : 'flex' }}
               ></div>
               
-              {/* Prix sous l'image */}
               <div className="price-section">
                 <span className="product-price">{formatPrice(produit.prix)}€</span>
               </div>
             </div>
 
-            {/* Informations du produit */}
             <div className="product-info-Product">
               <div>
                 <div className="product-tagline">
@@ -150,7 +136,6 @@ const ProductPage = () => {
                 </div>
               </div>
               
-              {/* Bouton Ajouter tout en bas à droite de la colonne info */}
               <div className="add-to-cart-section">
                 <button className="add-to-cart-btn" onClick={handleAddToCart}>
                   Ajouter au panier
@@ -161,10 +146,10 @@ const ProductPage = () => {
         </div>
       </main>
 
-      {/* Footer */}
       <Footer />
     </div>
   );
 };
 
 export default ProductPage;
+

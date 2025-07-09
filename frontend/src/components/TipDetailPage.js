@@ -24,7 +24,6 @@ const TipDetailPage = () => {
         console.log('Astuce récupérée:', astuceData);
         setAstuce(astuceData);
         
-        // Si l'astuce a un produit associé, le récupérer
         if (astuceData.idProduit) {
           const produitData = await apiService.getProduitById(astuceData.idProduit);
           console.log('Produit associé récupéré:', produitData);
@@ -51,13 +50,6 @@ const TipDetailPage = () => {
         prix: produitAssocie.prix,
         image: produitAssocie.image
       });
-      
-      if (success) {
-        const goToCart = window.confirm('Produit ajouté au panier ! Voulez-vous voir votre panier ?');
-        if (goToCart) {
-          navigate('/panier');
-        }
-      }
     }
   };
 
@@ -114,61 +106,16 @@ const TipDetailPage = () => {
 
       <main className="tip-detail-main">
         <div className="tip-detail-container">
-          {/* Bouton retour */}
-          <button className="back-button" onClick={handleBackToTips}>
-            ← Retour aux astuces
-          </button>
           
-          {/* Titre de l'astuce */}
           <h2 className="tip-detail-title">{astuce.titre}</h2>
           
           <div className="tip-detail-content">
-            {/* Image de l'astuce OU du produit associé */}
-            <div className="tip-detail-image-section">
-              {/* Priorité: image de l'astuce, sinon image du produit associé */}
-              {astuce.image ? (
-                <img 
-                  src={astuce.image.startsWith('/') ? astuce.image : `/${astuce.image}`}
-                  alt={astuce.titre}
-                  className="tip-detail-image"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                    e.target.nextSibling.style.display = 'flex';
-                  }}
-                />
-              ) : produitAssocie?.image ? (
-                <img 
-                  src={produitAssocie.image.startsWith('/') ? produitAssocie.image : `/${produitAssocie.image}`}
-                  alt={astuce.titre}
-                  className="tip-detail-image"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                    e.target.nextSibling.style.display = 'flex';
-                  }}
-                />
-              ) : null}
-              <div 
-                className="tip-detail-image-placeholder"
-                style={{ display: (astuce.image || produitAssocie?.image) ? 'none' : 'flex' }}
-              >
-              </div>
-            </div>
 
-            {/* Contenu de l'astuce */}
-            <div className="tip-detail-info">
-              <div className="tip-detail-text">
-                <div 
-                  className="tip-description"
-                  dangerouslySetInnerHTML={{ __html: astuce.texte }}
-                />
-              </div>
-              
-              {/* Produit associé comme dans HomePage */}
-              {produitAssocie && (
-                <div className="associated-product-home-style">
-                  <h3 className="product-section-title">Produit recommandé</h3>
-                  
-                  <div className="product-cardHome-detail" onClick={() => navigate(`/produit/${produitAssocie.id}`)}>
+            <div className="tip-detail-image-section" onClick={() => navigate(`/produit/${produitAssocie.id}`)}>
+              {produitAssocie ? (
+
+                
+                  <div className="" style = {{ width: '70%' }}>
                     <h3 className="product-titleHome">{produitAssocie.nom}</h3>
                     <div className="product-imageHome">
                       {produitAssocie.image ? (
@@ -194,8 +141,40 @@ const TipDetailPage = () => {
                     </div>
                     <p className="product-priceHome">{formatPrice(produitAssocie.prix)}€</p>
                   </div>
-                </div>
+                
+              ) : (
+
+                <>
+                  {astuce.image ? (
+                    <img 
+                      src={astuce.image.startsWith('/') ? astuce.image : `/${astuce.image}`}
+                      alt={astuce.titre}
+                      className="tip-detail-image"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                  ) : null}
+                  <div 
+                    className="tip-detail-image-placeholder"
+                    style={{ display: astuce.image ? 'none' : 'flex' }}
+                  >
+                  </div>
+                </>
               )}
+            </div>
+
+
+            <div className="tip-detail-info">
+              <div className="tip-detail-text" style={{ textAlign: 'left' }}>
+                <div 
+                  className="tip-description"
+                  style={{ whiteSpace: 'pre-line', marginTop: '50px', fontSize: '1.1rem', lineHeight: '1.6' }}
+                >
+                  {astuce.texte}
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -26,7 +26,6 @@ public class Utilisateur {
     @Column(name = "role")
     private Integer role = 0;
     
-    // Constructeurs
     public Utilisateur() {}
     
     public Utilisateur(String nom, String prenom, String email, String mdp) {
@@ -36,7 +35,6 @@ public class Utilisateur {
         this.mdp = mdp;
     }
     
-    // Getters et Setters
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
     

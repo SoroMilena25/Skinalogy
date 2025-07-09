@@ -184,6 +184,11 @@
   border-radius: 3px;
 }
 
+.admin{
+  flex-direction: row!important;
+  gap: 170px!important;
+}
+
 /* Pagination */
 .pagination {
   padding: 20px;
@@ -227,6 +232,7 @@
   font-size: 0.9rem;
   font-weight: 600;
   color: #333;
+  text-align: left;
 }
 
 .filter-input {

@@ -16,6 +16,15 @@
 .dashboard-header {
   background-color: #9B9B9B;
   padding: 20px 40px;
+      padding-top: 60px;
+}
+
+.kpi-card{
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
 }
 
 .header-content {
@@ -266,6 +275,57 @@
   font-weight: 600;
   text-align: center;
   margin-top: 15px;
+}
+
+/* KPI Styles */
+.kpi-row {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.kpi-row-bottom {
+  gap: 2.5rem;
+}
+
+.kpi-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 1.5rem 2.5rem;
+  text-align: center;
+  min-width: 140px;
+  color: #5a2d1c;
+  font-family: inherit;
+}
+
+.kpi-large {
+  min-width: 220px;
+  font-size: 1.1rem;
+}
+
+.kpi-label {
+  color: #5a2d1c;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.kpi-value {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #5a2d1c;
+}
+
+@media (max-width: 900px) {
+  .kpi-row, .kpi-row-bottom {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+  }
+  .kpi-large {
+    min-width: 140px;
+  }
 }
 
 /* Responsive Design */

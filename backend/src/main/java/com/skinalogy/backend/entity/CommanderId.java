@@ -9,7 +9,6 @@ public class CommanderId implements Serializable {
     private Integer idProduit;
     private Integer idFacture;
     
-    // Constructeurs
     public CommanderId() {}
     
     public CommanderId(Integer idUtilisateur, Integer idProduit, Integer idFacture) {
@@ -18,7 +17,6 @@ public class CommanderId implements Serializable {
         this.idFacture = idFacture;
     }
     
-    // Getters et Setters
     public Integer getIdUtilisateur() { return idUtilisateur; }
     public void setIdUtilisateur(Integer idUtilisateur) { this.idUtilisateur = idUtilisateur; }
     
@@ -28,7 +26,6 @@ public class CommanderId implements Serializable {
     public Integer getIdFacture() { return idFacture; }
     public void setIdFacture(Integer idFacture) { this.idFacture = idFacture; }
     
-    // equals et hashCode obligatoires pour les clés composites
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

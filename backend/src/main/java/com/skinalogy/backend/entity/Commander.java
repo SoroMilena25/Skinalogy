@@ -1,5 +1,6 @@
 package com.skinalogy.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
@@ -26,20 +27,21 @@ public class Commander {
     @Column(name = "prixDonne", precision = 10, scale = 2, nullable = false)
     private BigDecimal prixDonne;
     
-    // Relations optionnelles pour faciliter les requêtes
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "IdUtilisateur", insertable = false, updatable = false)
+    @JsonIgnore
     private Utilisateur utilisateur;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "IdProduit", insertable = false, updatable = false)
+    @JsonIgnore
     private Produit produit;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "IdFacture", insertable = false, updatable = false)
+    @JsonIgnore
     private Facture facture;
     
-    // Constructeurs
     public Commander() {}
     
     public Commander(Integer idUtilisateur, Integer idProduit, Integer idFacture, 
@@ -51,7 +53,6 @@ public class Commander {
         this.prixDonne = prixDonne;
     }
     
-    // Getters et Setters
     public Integer getIdUtilisateur() { return idUtilisateur; }
     public void setIdUtilisateur(Integer idUtilisateur) { this.idUtilisateur = idUtilisateur; }
     

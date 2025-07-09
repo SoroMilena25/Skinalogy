@@ -20,12 +20,10 @@ const SearchPage = () => {
   const [skinTypes, setSkinTypes] = useState([]);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
-  // États pour les sections dépliables
   const [isPriceOpen, setIsPriceOpen] = useState(true);
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(true);
   const [isSkinTypesOpen, setIsSkinTypesOpen] = useState(true);
 
-  // Hook pour le panier
   const { addToCart } = useCart();
   const navigate = useNavigate();
 
@@ -37,7 +35,6 @@ const SearchPage = () => {
         setProducts(data);
         setFilteredProducts(data);
         
-        // Calcul du prix max
         const prixMaxRaw = data.length > 0 ? Math.max(...data.map(p => p.prix || 0)) : 100;
         const prixMax = Math.ceil(prixMaxRaw);
         setMaxPrice(prixMax);
@@ -72,12 +69,10 @@ const SearchPage = () => {
     fetchSkinTypes();
   }, []);
 
-  // Fonction pour naviguer vers la page produit
   const handleProductClick = (productId) => {
     navigate(`/produit/${productId}`);
   };
 
-  // Fonction pour ajouter au panier
   const handleAddToCart = (e, product) => {
     e.stopPropagation();
     
@@ -89,7 +84,6 @@ const SearchPage = () => {
     });
   };
 
-  // Fonctions pour gérer les filtres
   const handleCategoryChange = (categoryId) => {
     setSelectedCategories(prev => 
       prev.includes(categoryId) 
@@ -106,7 +100,6 @@ const SearchPage = () => {
     );
   };
 
-  // Fonction pour réinitialiser tous les filtres
   const handleResetFilters = () => {
     setSearchTerm('');
     setPriceRange({ min: 0, max: maxPrice });
@@ -116,7 +109,6 @@ const SearchPage = () => {
     setIsMobileFilterOpen(false);
   };
 
-  // Fonction pour appliquer les filtres
   const handleApplyFilters = () => {
     let filtered = products.filter(product => {
       const price = product.prix || 0;
@@ -130,7 +122,6 @@ const SearchPage = () => {
     setIsMobileFilterOpen(false);
   };
 
-  // Fonction pour basculer l'affichage mobile du filtre
   const toggleMobileFilter = () => {
     setIsMobileFilterOpen(!isMobileFilterOpen);
   };
@@ -138,17 +129,16 @@ const SearchPage = () => {
   return (
     <div className="shop-page">
       <Navbar />
-      {/* Header avec logo et hero */}
+
       <header className="shop-header">
         <div className="hero-content">
           <h1 className="hero-logo">SKINALOGY</h1>
         </div>
       </header>
 
-      {/* Barre de recherche séparée */}
       <section className="search-section">
         <div className="search-container">
-          {/* Bouton filtre mobile */}
+
           <button className="mobile-filter-btn" onClick={toggleMobileFilter}>
             <span className="hamburger-line"></span>
             <span className="hamburger-line"></span>
@@ -162,7 +152,7 @@ const SearchPage = () => {
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
-              // Recherche en live sur le nom du produit
+
               const value = e.target.value;
               let filtered = products.filter(product => {
                 const price = product.prix || 0;
@@ -178,13 +168,12 @@ const SearchPage = () => {
         </div>
       </section>
 
-      {/* Overlay pour fermer le filtre mobile */}
       {isMobileFilterOpen && <div className="mobile-filter-overlay" onClick={toggleMobileFilter}></div>}
 
       <div className="shop-content">
-        {/* Sidebar avec filtres */}
+
         <aside className={`filters-sidebar ${isMobileFilterOpen ? 'mobile-open' : ''}`}>
-          {/* Filtre Prix */}
+
           <div className="filter-section">
             <h3 className="filter-title" onClick={() => setIsPriceOpen(!isPriceOpen)}>
               PRIX <span className={`chevron ${isPriceOpen ? 'open' : ''}`}>▼</span>
@@ -214,7 +203,6 @@ const SearchPage = () => {
             )}
           </div>
 
-          {/* Filtre Catégories */}
           <div className="filter-section">
             <h3 className="filter-title" onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}>
               CATÉGORIES <span className={`chevron ${isCategoriesOpen ? 'open' : ''}`}>▼</span>
@@ -238,7 +226,6 @@ const SearchPage = () => {
             )}
           </div>
 
-          {/* Filtre Types de peau */}
           <div className="filter-section">
             <h3 className="filter-title" onClick={() => setIsSkinTypesOpen(!isSkinTypesOpen)}>
               TYPES DE PEAU <span className={`chevron ${isSkinTypesOpen ? 'open' : ''}`}>▼</span>
@@ -262,7 +249,6 @@ const SearchPage = () => {
             )}
           </div>
 
-          {/* Boutons Filtrer et Réinitialiser */}
           <div className="filter-actions">
             <button className="filter-btn-Search apply-btn" onClick={handleApplyFilters}>
               FILTRER
@@ -273,7 +259,6 @@ const SearchPage = () => {
           </div>
         </aside>
 
-        {/* Grille des produits */}
         <main className="products-section-Search">
           {isLoading ? (
             <div>Chargement des produits...</div>
@@ -312,7 +297,6 @@ const SearchPage = () => {
         </main>
       </div>
 
-      {/* Footer */}
       <Footer />
     </div>
   );

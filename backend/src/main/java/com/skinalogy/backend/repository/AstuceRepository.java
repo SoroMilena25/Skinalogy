@@ -11,19 +11,14 @@ import java.util.Optional;
 @Repository
 public interface AstuceRepository extends JpaRepository<Astuce, Integer> {
     
-    // Récupérer les astuces par produit
     List<Astuce> findByIdProduit(Integer idProduit);
-    
-    // Rechercher des astuces par titre
+
     List<Astuce> findByTitreContainingIgnoreCase(String titre);
     
-    // Rechercher des astuces par contenu
     List<Astuce> findByTexteContainingIgnoreCase(String texte);
     
-    // Rechercher des astuces par titre ou contenu
     List<Astuce> findByTitreContainingIgnoreCaseOrTexteContainingIgnoreCase(String titre, String texte);
     
-    // Récupérer toutes les astuces triées par titre
     List<Astuce> findAllByOrderByTitreAsc();
 
     @Query(value = "SELECT id, titre, texte, image, idProduit, top_home FROM astuce WHERE top_home = true LIMIT 1", nativeQuery = true)

@@ -24,7 +24,7 @@ class ApiService {
     return response.json();
   }
 
-    // Récupérer toutes les astuces
+
   async getAllAstuces() {
     const response = await fetch(`${API_BASE_URL}/astuces`);
     if (!response.ok) {
@@ -33,7 +33,7 @@ class ApiService {
     return response.json();
   }
 
-  // Récupérer une astuce par ID
+
   async getAstuceById(id) {
     const response = await fetch(`${API_BASE_URL}/astuces/${id}`);
     if (!response.ok) {
@@ -42,9 +42,7 @@ class ApiService {
     return response.json();
   }
 
-  // ====== MÉTHODES ASTUCES ======
 
-  // Récupérer toutes les astuces
   async getAllAstuces() {
     const response = await fetch(`${API_BASE_URL}/astuces`);
     if (!response.ok) {
@@ -53,7 +51,7 @@ class ApiService {
     return response.json();
   }
 
-  // Récupérer une astuce par ID
+
   async getAstuceById(id) {
     const response = await fetch(`${API_BASE_URL}/astuces/${id}`);
     if (!response.ok) {
@@ -104,7 +102,7 @@ class ApiService {
     return data;
   }
 
-  // Mettre à jour le profil utilisateur
+
   async updateUserProfile(userId, userData) {
     const response = await fetch(`${API_BASE_URL}/utilisateurs/${userId}`, {
       method: 'PUT',
@@ -118,7 +116,7 @@ class ApiService {
     return data;
   }
 
-  // Récupérer l'historique des commandes d'un utilisateur
+
   async getUserOrders(userId) {
     const response = await fetch(`${API_BASE_URL}/utilisateurs/${userId}/commandes`);
     const data = await response.json();
@@ -128,7 +126,14 @@ class ApiService {
     return data;
   }
 
- // Créer un PaymentIntent simple
+  async getAllOrders() {
+    const response = await fetch(`${API_BASE_URL}/commandes`);
+    if (!response.ok) {
+      throw new Error('Erreur lors de la récupération des commandes');
+    }
+    return response.json();
+  }
+
   async createPaymentIntent(amount) {
     console.log('🔍 Création PaymentIntent, montant:', amount);
     const response = await fetch(`${API_BASE_URL}/payments/create-payment-intent`, {
@@ -143,11 +148,11 @@ class ApiService {
     return data;
   }
 
-  // NOUVELLE MÉTHODE : Traiter une commande complète (adaptée à votre backend)
+
   async processOrder(userId, cart) {
     console.log('🔍 Traitement commande:', { userId, cart });
     
-    // Vérifications côté client
+
     if (!cart || !Array.isArray(cart) || cart.length === 0) {
       throw new Error('Le panier est vide ou invalide');
     }
@@ -156,27 +161,26 @@ class ApiService {
       throw new Error('ID utilisateur manquant');
     }
 
-    // Calculer le total pour créer le PaymentIntent
+
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const amountInCents = Math.round(total * 100);
 
-    // 1. Créer le PaymentIntent
+
     const paymentData = await this.createPaymentIntent(amountInCents);
     
-    // 2. Retourner les données dans le format attendu par StripePayment.js
+
     return {
       clientSecret: paymentData.clientSecret,
-      factureId: null, // Sera créé après confirmation du paiement
+      factureId: null,
       total: total,
       message: "PaymentIntent créé avec succès"
     };
   }
 
-  // Confirmer le paiement et créer la commande (méthode alternative)
+
   async confirmPayment(paymentIntentId, idUtilisateur, cart) {
     console.log('🔍 Cart reçu pour confirmation:', cart);
-    
-    // Vérifier et nettoyer les données du panier avant envoi
+
     const items = cart.map((item, index) => {
       console.log(`🔍 Item ${index}:`, item);
       
@@ -191,7 +195,7 @@ class ApiService {
       }
       
       return {
-        id: item.id,              // Garder la structure originale pour le backend
+        id: item.id,             
         quantity: item.quantity,  
         price: item.price        
       };
@@ -214,6 +218,131 @@ class ApiService {
       throw new Error(data.error || 'Erreur lors de la confirmation du paiement');
     }
     return data;
+  }
+
+  async logLogin(username) {
+    const response = await fetch(`${API_BASE_URL}/logs/login?username=${encodeURIComponent(username)}`, {
+      method: 'POST'
+    });
+    if (!response.ok) {
+      throw new Error('Erreur lors de l\'insertion du log de connexion');
+    }
+    return response.json();
+  }
+
+  async getFactureById(id) {
+    const response = await fetch(`${API_BASE_URL}/factures/${id}`);
+    if (!response.ok) {
+      throw new Error('Facture non trouvée');
+    }
+    return response.json();
+  }
+
+  async getCommandesByFacture(id) {
+    const response = await fetch(`${API_BASE_URL}/commandes/facture/${id}`);
+    if (!response.ok) {
+      throw new Error('Lignes de commande non trouvées');
+    }
+    return response.json();
+  }
+
+  async getUtilisateurById(id) {
+    const response = await fetch(`${API_BASE_URL}/utilisateurs/${id}`);
+    if (!response.ok) {
+      throw new Error('Utilisateur non trouvé');
+    }
+    return response.json();
+  }
+
+  async getAllUsers() {
+    const response = await fetch(`${API_BASE_URL}/utilisateurs`);
+    if (!response.ok) {
+      throw new Error('Erreur lors de la récupération des utilisateurs');
+    }
+    return response.json();
+  }
+
+  async updateUserRole(userId, nouveauRole) {
+    const response = await fetch(`${API_BASE_URL}/utilisateurs/${userId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ role: nouveauRole })
+    });
+    if (!response.ok) {
+      throw new Error('Erreur lors de la mise à jour du rôle');
+    }
+    return response.json();
+  }
+
+  // Ajoute la mise à jour d'un produit
+  async updateProduit(id, produit) {
+    const response = await fetch(`${API_BASE_URL}/produits/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(produit)
+    });
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.error || 'Erreur lors de la mise à jour du produit');
+    }
+    return response.json();
+  }
+
+  // Ajoute la suppression d'un produit
+  async deleteProduit(id) {
+    const response = await fetch(`${API_BASE_URL}/produits/${id}`, {
+      method: 'DELETE'
+    });
+    if (!response.ok) {
+      throw new Error('Erreur lors de la suppression du produit');
+    }
+    // Si le backend ne retourne pas de body, ne pas parser en JSON
+    const text = await response.text();
+    if (text) {
+      try {
+        return JSON.parse(text);
+      } catch {
+        return text;
+      }
+    }
+    return null;
+  }
+
+  // Upload d'une image produit
+  async uploadImage(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await fetch(`${API_BASE_URL}/upload`, {
+      method: 'POST',
+      body: formData
+    });
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(text || "Erreur lors de l'upload de l'image");
+    }
+    return response.json(); // { imagePath: 'images/filename.ext' }
+  }
+
+  // Insertion d'un produit
+  async insertProduit(produit) {
+    const response = await fetch(`${API_BASE_URL}/produits`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(produit)
+    });
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.error || 'Erreur lors de l\'insertion du produit');
+    }
+    return response.json();
+  }
+
+  async getStatsFacturesParMois(annee) {
+    const response = await fetch(`${API_BASE_URL}/factures/stats-mensuelles?annee=${annee}`);
+    if (!response.ok) {
+      throw new Error("Erreur lors de la récupération des stats factures par mois");
+    }
+    return response.json();
   }
 }
 

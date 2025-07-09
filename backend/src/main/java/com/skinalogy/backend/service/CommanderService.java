@@ -22,55 +22,46 @@ public class CommanderService {
     @Autowired
     private FactureService factureService;
     
-    // Récupérer toutes les commandes
     public List<Commander> getAllCommandes() {
         return commanderRepository.findAll();
     }
     
-    // Récupérer une commande par ID composite
     public Optional<Commander> getCommandeById(CommanderId id) {
         return commanderRepository.findById(id);
     }
-    
-    // Récupérer les commandes d'un utilisateur
+
     public List<Commander> getCommandesByUtilisateur(Integer idUtilisateur) {
         return commanderRepository.findCommandesWithDetailsByUtilisateur(idUtilisateur);
     }
     
-    // Récupérer les commandes d'une facture
     public List<Commander> getCommandesByFacture(Integer idFacture) {
-        return commanderRepository.findCommandesWithProduitsByFacture(idFacture);
+        return commanderRepository.findByIdFacture(idFacture);
     }
     
-    // Récupérer les commandes d'un produit
     public List<Commander> getCommandesByProduit(Integer idProduit) {
         return commanderRepository.findByIdProduit(idProduit);
     }
     
-    // Créer une nouvelle commande
     public Commander createCommande(Commander commande) {
         return commanderRepository.save(commande);
     }
     
-    // Créer plusieurs commandes en une transaction (pour un panier complet)
     @Transactional
     public List<Commander> createCommandes(List<Commander> commandes) {
         return commanderRepository.saveAll(commandes);
     }
     
-    // Traitement complet d'une commande : créer facture + lignes de commande
     @Transactional
     public Facture processCommande(Integer idUtilisateur, List<CartItem> items) {
-        // 1. Calculer le total
+
         BigDecimal total = items.stream()
                 .map(item -> item.getPrix().multiply(BigDecimal.valueOf(item.getQuantite())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         
-        // 2. Créer la facture
         Facture facture = new Facture(LocalDateTime.now(), total.doubleValue());
         facture = factureService.createFacture(facture);
+        System.out.println("ID de la facture utilisée pour commander : " + facture.getId());
         
-        // 3. Créer les lignes de commande
         for (CartItem item : items) {
             Commander commande = new Commander(
                 idUtilisateur,
@@ -85,7 +76,6 @@ public class CommanderService {
         return facture;
     }
     
-    // Mettre à jour une commande
     public Commander updateCommande(CommanderId id, Commander commandeDetails) {
         return commanderRepository.findById(id)
                 .map(commande -> {
@@ -96,7 +86,6 @@ public class CommanderService {
                 .orElse(null);
     }
     
-    // Supprimer une commande
     public boolean deleteCommande(CommanderId id) {
         return commanderRepository.findById(id)
                 .map(commande -> {
@@ -106,13 +95,11 @@ public class CommanderService {
                 .orElse(false);
     }
     
-    // Classe interne pour représenter un item du panier
     public static class CartItem {
         private Integer idProduit;
         private Integer quantite;
         private BigDecimal prix;
         
-        // Constructeurs
         public CartItem() {}
         
         public CartItem(Integer idProduit, Integer quantite, BigDecimal prix) {
@@ -121,7 +108,6 @@ public class CommanderService {
             this.prix = prix;
         }
         
-        // Getters et Setters
         public Integer getIdProduit() { return idProduit; }
         public void setIdProduit(Integer idProduit) { this.idProduit = idProduit; }
         

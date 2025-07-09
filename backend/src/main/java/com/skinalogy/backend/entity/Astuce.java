@@ -22,18 +22,23 @@ public class Astuce {
     
     @Column(name = "idProduit")
     private Integer idProduit;
+
+    @Column(name = "top_home")
+    private Boolean topHome = false;
     
-    // Constructeurs
     public Astuce() {}
     
-    public Astuce(String titre, String texte, String image, Integer idProduit) {
+    public Astuce(String titre, String texte, String image, Integer idProduit, Boolean topHome) {
         this.titre = titre;
         this.texte = texte;
         this.image = image;
         this.idProduit = idProduit;
+        this.topHome = topHome;
     }
+
+    public Boolean getTopHome() { return topHome; }
+    public void setTopHome(Boolean topHome) { this.topHome = topHome; }
     
-    // Getters et Setters
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
     

@@ -24,19 +24,16 @@ const StripePayment = ({ amount, onSuccess, onCancel, cart, userId }) => {
       console.log('🔥 Items du panier:', cart);
       console.log('🔥 ID utilisateur:', userId);
       
-      // Vérification que le panier existe et n'est pas vide
       if (!cart || !Array.isArray(cart) || cart.length === 0) {
         throw new Error('Le panier est vide ou invalide');
       }
       
-      // 1. Créer le PaymentIntent via processOrder
       console.log('🔥 CALLING processOrder with:', { userId, cart });
       const orderData = await apiService.processOrder(userId, cart);
       console.log('🔥 RESPONSE from processOrder:', orderData);
       
       const { clientSecret } = orderData;
 
-      // 2. Confirmer le paiement avec Stripe
       const result = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: elements.getElement(CardElement),
@@ -49,7 +46,6 @@ const StripePayment = ({ amount, onSuccess, onCancel, cart, userId }) => {
       } else {
         console.log('🔥 Paiement Stripe réussi!', result.paymentIntent);
         
-        // 3. Confirmer côté backend et créer la commande/facture
         console.log('🔥 Confirmation backend...');
         const confirmData = await apiService.confirmPayment(
           result.paymentIntent.id,
@@ -60,7 +56,6 @@ const StripePayment = ({ amount, onSuccess, onCancel, cart, userId }) => {
         console.log('🔥 Confirmation backend réussie:', confirmData);
         console.log('🔥 Facture créée:', confirmData.factureId);
         
-        // 4. Notifier le succès
         onSuccess(result.paymentIntent, confirmData.factureId);
       }
     } catch (err) {

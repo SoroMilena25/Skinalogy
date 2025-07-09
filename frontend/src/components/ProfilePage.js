@@ -22,7 +22,7 @@ const ProfilePage = () => {
   });
 
   useEffect(() => {
-    // Récupérer les informations utilisateur depuis localStorage
+
     const userData = localStorage.getItem('user');
     if (userData) {
       const parsedUser = JSON.parse(userData);
@@ -36,7 +36,6 @@ const ProfilePage = () => {
         confirmPassword: ''
       });
       
-      // Charger l'historique des commandes
       loadOrderHistory(parsedUser.id);
     }
   }, []);
@@ -44,7 +43,7 @@ const ProfilePage = () => {
   const loadOrderHistory = async (userId) => {
     try {
       setLoadingOrders(true);
-      // Récupérer les commandes de l'utilisateur
+
       const userOrders = await apiService.getUserOrders(userId);
       setOrders(userOrders);
     } catch (error) {
@@ -62,7 +61,6 @@ const ProfilePage = () => {
       [name]: value
     }));
     
-    // Effacer l'erreur du champ modifié
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -74,7 +72,6 @@ const ProfilePage = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    // Validation des champs obligatoires
     if (!formData.nom.trim()) {
       newErrors.nom = 'Le nom est requis';
     }
@@ -82,7 +79,6 @@ const ProfilePage = () => {
       newErrors.prenom = 'Le prénom est requis';
     }
 
-    // Validation de l'email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email.trim()) {
       newErrors.email = 'L\'email est requis';
@@ -90,7 +86,6 @@ const ProfilePage = () => {
       newErrors.email = 'Format d\'email invalide';
     }
 
-    // Validation du mot de passe (si changement demandé)
     if (formData.newPassword) {
       if (!formData.currentPassword) {
         newErrors.currentPassword = 'Mot de passe actuel requis pour le changement';
@@ -125,7 +120,6 @@ const ProfilePage = () => {
         email: formData.email
       };
 
-      // Ajouter les mots de passe seulement si changement demandé
       if (formData.newPassword) {
         updateData.currentPassword = formData.currentPassword;
         updateData.newPassword = formData.newPassword;
@@ -133,11 +127,9 @@ const ProfilePage = () => {
 
       const updatedUser = await apiService.updateUserProfile(user.id, updateData);
       
-      // Mettre à jour localStorage
       localStorage.setItem('user', JSON.stringify(updatedUser));
       setUser(updatedUser);
       
-      // Réinitialiser les champs de mot de passe
       setFormData(prev => ({
         ...prev,
         currentPassword: '',
@@ -147,7 +139,6 @@ const ProfilePage = () => {
       
       setSuccessMessage('Profil mis à jour avec succès !');
       
-      // Faire disparaître le message après 5 secondes
       setTimeout(() => setSuccessMessage(''), 5000);
       
     } catch (error) {
@@ -190,20 +181,18 @@ const ProfilePage = () => {
     <div className="profile-page">
       <Navbar />
       
-      {/* Section Hero */}
       <section className="profile-hero">
         <div className="hero-content">
           <h1 className="hero-title">SKINALOGY</h1>
         </div>
       </section>
 
-      {/* Section principale */}
       <main className="profile-main">
         <div className="profile-container">
           <h2 className="profile-title">MON PROFIL</h2>
           
           <div className="profile-sections">
-            {/* Section informations personnelles */}
+
             <div className="personal-info-section">
               <h3 className="section-title">Informations personnelles</h3>
               
@@ -238,7 +227,7 @@ const ProfilePage = () => {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="nom" className="form-label">Nom</label>
+                  <label htmlFor="nom" className="form-label">Nom {formData.nom}</label>
                   <input
                     type="text"
                     id="nom"
@@ -273,7 +262,6 @@ const ProfilePage = () => {
 
                 <hr style={{margin: '20px 0', border: '1px solid #e0e0e0'}} />
                 
-                <h4 style={{marginBottom: '15px', color: '#582828'}}>Changer le mot de passe (optionnel)</h4>
                 
                 <div className="form-group">
                   <label htmlFor="currentPassword" className="form-label">Mot de passe actuel</label>
@@ -333,7 +321,6 @@ const ProfilePage = () => {
               </form>
             </div>
 
-            {/* Section historique des commandes */}
             <div className="order-history-section">
               <h3 className="section-title">Historique des commandes</h3>
               
@@ -351,10 +338,10 @@ const ProfilePage = () => {
                     <div key={order.factureId} className="order-card">
                       <div className="order-header">
                         <div className="order-info">
-                          <h3>Facture #{order.factureId}</h3>
+                          <h3>Facture</h3>
                           <p className="order-date">{formatDate(order.datePaiement)}</p>
                         </div>
-                        <div className="order-total">
+                        <div className="order-total-profile">
                           {formatPrice(order.total)}€
                         </div>
                       </div>

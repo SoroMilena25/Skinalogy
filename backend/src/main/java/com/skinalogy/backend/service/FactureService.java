@@ -16,22 +16,18 @@ public class FactureService {
     @Autowired
     private FactureRepository factureRepository;
     
-    // Récupérer toutes les factures
     public List<Facture> getAllFactures() {
         return factureRepository.findAllByOrderByDatePaiementDesc();
     }
     
-    // Récupérer une facture par ID
     public Optional<Facture> getFactureById(Integer id) {
         return factureRepository.findById(id);
     }
     
-    // Récupérer les factures d'une période
     public List<Facture> getFacturesPeriode(LocalDateTime startDate, LocalDateTime endDate) {
         return factureRepository.findByDatePaiementBetween(startDate, endDate);
     }
     
-    // Récupérer les factures d'aujourd'hui
     public List<Facture> getFacturesAujourdhui() {
         LocalDate today = LocalDate.now();
         LocalDateTime startOfDay = today.atStartOfDay();
@@ -39,7 +35,6 @@ public class FactureService {
         return factureRepository.findByDatePaiementBetween(startOfDay, endOfDay);
     }
     
-    // Récupérer les factures du mois
     public List<Facture> getFacturesMois() {
         LocalDate now = LocalDate.now();
         LocalDateTime startOfMonth = now.withDayOfMonth(1).atStartOfDay();
@@ -47,25 +42,20 @@ public class FactureService {
         return factureRepository.findByDatePaiementBetween(startOfMonth, endOfMonth);
     }
     
-    // Récupérer les factures triées par montant
     public List<Facture> getFacturesByMontant() {
         return factureRepository.findAllByOrderByTotalDesc();
     }
     
-    // Récupérer les grosses factures (montant > seuil)
     public List<Facture> getGrossesFactures(Double seuil) {
         return factureRepository.findByTotalGreaterThan(seuil);
     }
     
-    // Créer une nouvelle facture
     public Facture createFacture(Facture facture) {
-        if (facture.getDatePaiement() == null) {
-            facture.setDatePaiement(LocalDateTime.now());  // ← Toujours mettre la date actuelle
-        }
-        return factureRepository.save(facture);
+        Facture saved = factureRepository.save(facture);
+        System.out.println("Facture sauvegardée avec ID : " + saved.getId());
+        return saved;
     }
     
-    // Mettre à jour une facture
     public Facture updateFacture(Integer id, Facture factureDetails) {
         return factureRepository.findById(id)
                 .map(facture -> {
@@ -76,7 +66,6 @@ public class FactureService {
                 .orElse(null);
     }
     
-    // Supprimer une facture
     public boolean deleteFacture(Integer id) {
         return factureRepository.findById(id)
                 .map(facture -> {
@@ -86,7 +75,6 @@ public class FactureService {
                 .orElse(false);
     }
     
-    // Statistiques
     public Double getTotalVentesAujourdhui() {
         LocalDate today = LocalDate.now();
         LocalDateTime startOfDay = today.atStartOfDay();
@@ -108,5 +96,26 @@ public class FactureService {
         LocalDateTime startOfDay = today.atStartOfDay();
         LocalDateTime endOfDay = today.atTime(23, 59, 59);
         return factureRepository.countFacturesPeriode(startOfDay, endOfDay);
+    }
+    
+    public List<java.util.Map<String, Object>> getStatsFacturesParMois(int annee) {
+        String[] moisLabels = {"Jan", "Fév", "Mar", "Avr", "Mai", "Jun", "Jul", "Aoû", "Sep", "Oct", "Nov", "Déc"};
+        List<Object[]> results = factureRepository.countFacturesByMonth(annee);
+        java.util.Map<Integer, Long> moisToCount = new java.util.HashMap<>();
+        for (Object[] row : results) {
+            moisToCount.put((Integer) row[0], (Long) row[1]);
+        }
+        List<java.util.Map<String, Object>> stats = new java.util.ArrayList<>();
+        for (int i = 1; i <= 12; i++) {
+            java.util.Map<String, Object> map = new java.util.HashMap<>();
+            map.put("mois", moisLabels[i-1]);
+            map.put("nombre", moisToCount.getOrDefault(i, 0L));
+            stats.add(map);
+        }
+        return stats;
+    }
+
+    public List<Facture> getAllFacturesOrderByDatePaiementDesc() {
+        return factureRepository.findAllByOrderByDatePaiementDesc();
     }
 }

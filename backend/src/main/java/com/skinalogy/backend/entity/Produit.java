@@ -35,7 +35,6 @@ public class Produit {
     @Column(name = "IdTypePeau")
     private Integer idTypePeau;
     
-    // Constructeurs
     public Produit() {}
     
     public Produit(String nom, Double prix, String description, String image) {
@@ -45,7 +44,6 @@ public class Produit {
         this.image = image;
     }
     
-    // Getters et Setters
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
     

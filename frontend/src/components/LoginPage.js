@@ -19,7 +19,6 @@ const LoginPage = () => {
       [name]: value
     }));
     
-    // Effacer l'erreur du champ modifié
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -31,7 +30,6 @@ const LoginPage = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    // Validation de l'email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email) {
       newErrors.email = 'L\'email est requis';
@@ -39,7 +37,6 @@ const LoginPage = () => {
       newErrors.email = 'Format d\'email invalide';
     }
 
-    // Validation du mot de passe
     if (!formData.password) {
       newErrors.password = 'Le mot de passe est requis';
     }
@@ -61,14 +58,19 @@ const LoginPage = () => {
     try {
       console.log('🔍 Tentative de connexion avec:', { email: formData.email });
       const data = await apiService.login(formData.email, formData.password);
-      console.log('✅ Réponse reçue:', data);
+      console.log('Réponse reçue:', data);
 
       if (data) {
-        
-        // Sauvegarder le token JWT
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.utilisateur));
-        // Rediriger selon le rôle
+        // Insertion du log de connexion utilisateur dans MongoDB
+        if (data.utilisateur && data.utilisateur.email) {
+          try {
+            await apiService.logLogin(data.utilisateur.email);
+          } catch (e) {
+            console.warn('Log MongoDB non inséré:', e.message);
+          }
+        }
         if (data.utilisateur && data.utilisateur.role === 1) {
           window.location.href = '/dashboard';
         } else {
@@ -78,7 +80,7 @@ const LoginPage = () => {
         setErrors({ general: 'Une erreur est survenue lors de la connexion' });
       }
     } catch (data) {
-      console.error('❌ Erreur complète:', data);
+      console.error('Erreur complète:', data);
       if (data && data.error) {
         setErrors({ general: data.error });
       } else {
@@ -93,18 +95,14 @@ const LoginPage = () => {
     
     <div className="login-page">
       <Navbar />
-      {/* Section Hero avec image de fond et navigation */}
+
       <section className="login-hero">
-        {/* Header avec navigation */}
 
-
-        {/* Logo SKINALOGY */}
         <div className="hero-content">
           <h1 className="hero-logo">SKINALOGY</h1>
         </div>
       </section>
 
-      {/* Section principale dorée avec formulaire */}
       <section className="login-main">
         <div className="login-videos-container">
           <div className="video-side left">
@@ -115,11 +113,10 @@ const LoginPage = () => {
             <video src="/videos/video.mp4" autoPlay loop muted playsInline />
    
           </div>
-          {/* Formulaire superposé au centre */}
           <div className="login-form-side">
             <div className="login-form-container">
               <div className="login-form">
-                {/* Message d'erreur général */}
+
                 {errors.general && (
                   <div style={{
                     backgroundColor: '#f8d7da',
@@ -186,7 +183,6 @@ const LoginPage = () => {
                   {isLoading ? 'Connexion en cours...' : 'Se connecter'}
                 </button>
 
-                {/* Liens supplémentaires */}
                 <div style={{textAlign: 'center', marginTop: '20px'}}>
                   <p style={{marginBottom: '8px', fontSize: '14px'}}>
                     Pas encore de compte ? 
@@ -204,7 +200,6 @@ const LoginPage = () => {
         </div>
       </section>
 
-      {/* Section footer noire */}
       <Footer />
     </div>
   );

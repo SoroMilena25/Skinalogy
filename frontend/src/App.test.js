@@ -4,7 +4,6 @@ import App from './App';
 test('renders Skinalogy homepage', () => {
   render(<App />);
   
-  // Teste que le titre principal de ton app est présent (spécifiquement le h1)
   const titleElement = screen.getByRole('heading', { name: /SKINALOGY/i, level: 1 });
   expect(titleElement).toBeInTheDocument();
 });
@@ -12,7 +11,6 @@ test('renders Skinalogy homepage', () => {
 test('renders navigation links', () => {
   render(<App />);
   
-  // Teste que tes liens de navigation sont présents
   const connexionLink = screen.getByText(/CONNEXION/i);
   
 
@@ -22,7 +20,6 @@ test('renders navigation links', () => {
 test('renders beauty basics section', () => {
   render(<App />);
   
-  // Teste une section spécifique de ton app
   const beautySection = screen.getByText(/BEAUTY BASICS/i);
   expect(beautySection).toBeInTheDocument();
 });

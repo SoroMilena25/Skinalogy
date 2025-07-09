@@ -16,7 +16,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/payments")
-@CrossOrigin(origins = "http://localhost:3000")
 public class PaymentController {
     
     @Value("${stripe.secret.key}")
@@ -65,14 +64,12 @@ public class PaymentController {
         }
     }
     
-    // Nouvel endpoint pour confirmer le paiement et créer la commande
     @PostMapping("/confirm-payment")
     public ResponseEntity<?> confirmPayment(@RequestBody Map<String, Object> data) {
         try {
             System.out.println("=== CONFIRMATION PAIEMENT ===");
             System.out.println("Données reçues: " + data);
             
-            // Validation des données
             if (!data.containsKey("paymentIntentId") || !data.containsKey("idUtilisateur") || !data.containsKey("items")) {
                 return ResponseEntity.badRequest().body(Map.of("error", "Données manquantes"));
             }
@@ -82,25 +79,21 @@ public class PaymentController {
             @SuppressWarnings("unchecked")
             List<Map<String, Object>> itemsData = (List<Map<String, Object>>) data.get("items");
             
-            // Vérifier que le paiement a bien été confirmé côté Stripe
             Stripe.apiKey = stripeSecretKey;
             PaymentIntent intent = PaymentIntent.retrieve(paymentIntentId);
             
             if (!"succeeded".equals(intent.getStatus())) {
                 return ResponseEntity.badRequest().body(Map.of("error", "Paiement non confirmé"));
             }
-            
-            // Convertir les données en objets CartItem
 
             List<CommanderService.CartItem> items = itemsData.stream()
                     .map(itemData -> new CommanderService.CartItem(
-                            (Integer) itemData.get("id"),        // Frontend envoie "id"
-                            (Integer) itemData.get("quantity"),  // Frontend envoie "quantity"
-                            new BigDecimal(itemData.get("price").toString()) // Frontend envoie "price"
+                            (Integer) itemData.get("id"),       
+                            (Integer) itemData.get("quantity"), 
+                            new BigDecimal(itemData.get("price").toString())
                     ))
                     .toList();
             
-            // Créer la facture et les lignes de commande MAINTENANT que le paiement est confirmé
             Facture facture = commanderService.processCommande(idUtilisateur, items);
             
             System.out.println("Commande créée après paiement confirmé - Facture ID: " + facture.getId());

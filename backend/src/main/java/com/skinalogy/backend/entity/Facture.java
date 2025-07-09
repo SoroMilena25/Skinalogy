@@ -12,13 +12,17 @@ public class Facture {
     @Column(name = "Id")
     private Integer id;
     
-    @Column(name = "date_paiement", nullable = false)  // ← Utiliser date_paiement au lieu de datePaiement
+    @Column(name = "date_paiement", nullable = false) 
     private LocalDateTime datePaiement;
     
     @Column(name = "total", nullable = false)
     private Double total;
     
-    // Constructeurs
+    /*
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "IdUtilisateur", insertable = false, updatable = false)
+    private Utilisateur utilisateur; */
+    
     public Facture() {}
     
     public Facture(LocalDateTime datePaiement, Double total) {
@@ -26,7 +30,6 @@ public class Facture {
         this.total = total;
     }
     
-    // Getters et Setters
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
     
@@ -35,4 +38,8 @@ public class Facture {
     
     public Double getTotal() { return total; }
     public void setTotal(Double total) { this.total = total; }
+    
+    /* 
+    public Utilisateur getUtilisateur() { return utilisateur; }
+    public void setUtilisateur(Utilisateur utilisateur) { this.utilisateur = utilisateur; }*/
 }

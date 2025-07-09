@@ -10,12 +10,9 @@ import java.util.Optional;
 @Repository
 public interface TypePeauRepository extends JpaRepository<TypePeau, Integer> {
     
-    // Rechercher un type de peau par nom
     Optional<TypePeau> findByNom(String nom);
     
-    // Rechercher des types de peau contenant un texte
     List<TypePeau> findByNomContainingIgnoreCase(String nom);
     
-    // Récupérer les types de peau triés par nom
     List<TypePeau> findAllByOrderByNomAsc();
 }

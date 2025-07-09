@@ -104,6 +104,7 @@
 /* Contenu principal */
 .order-detail-main {
   padding: 40px;
+  margin: 0 200px;
 }
 
 .order-detail-container {
@@ -118,11 +119,7 @@
   margin-bottom: 30px;
 }
 
-.order-detail-content {
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 40px;
-}
+
 
 /* Section principale */
 .order-main-section {
@@ -132,7 +129,7 @@
   overflow: hidden;
 }
 
-.order-card {
+.order-card-order {
   padding: 30px;
 }
 
@@ -150,8 +147,9 @@
 
 .info-group {
   display: flex;
-  flex-direction: column;
-  gap: 5px;
+  flex-direction: row;
+    gap: 50px;
+    align-items: center;
 }
 
 .info-label {
@@ -371,6 +369,7 @@
   
   .order-detail-main {
     padding: 20px;
+    
   }
   
   .page-title {
@@ -378,7 +377,7 @@
     text-align: center;
   }
   
-  .order-card {
+  .order-card-order {
     padding: 20px;
   }
   

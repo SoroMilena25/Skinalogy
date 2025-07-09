@@ -7,14 +7,12 @@ import Footer from './Footer';
 import StripePayment from './StripePayment';
 import { useCart } from '../hooks/useCart';
 
-// Remplace par ta vraie clé publique Stripe (pk_test_...)
 const stripePromise = loadStripe('pk_test_51RiFrTBGnhaIcuSbWV3LaC2F6TMv5XAsoXMUVPRCo6qbYn0ACSxHzEuEMy6Af1roQCivCRGXgwHWUxSi2cvncgwB00UQVwjYAp');
 
 const CartPage = () => {
   const { cart, cartTotal, updateQuantity, removeFromCart, clearCart } = useCart();
   const [showPayment, setShowPayment] = useState(false);
 
-  // Fonction pour récupérer l'ID utilisateur depuis localStorage
   const getCurrentUserId = () => {
     const user = localStorage.getItem('user');
     if (user) {
@@ -34,16 +32,12 @@ const CartPage = () => {
       return;
     }
 
-    // Vérifier qu'un utilisateur est connecté
     const userId = getCurrentUserId();
     if (!userId) {
       alert('Vous devez être connecté pour passer commande');
-      // Optionnel : rediriger vers la page de connexion
-      // window.location.href = '/login';
       return;
     }
     
-    // Debug pour voir la structure du panier
     console.log('🔍 Structure du panier:');
     cart.forEach((item, index) => {
       console.log(`Item ${index}:`, {
@@ -66,9 +60,8 @@ const CartPage = () => {
 
     clearCart();
 
-    alert(`Paiement réussi ! Facture n°${factureId} créée. Merci pour votre commande.`);
+    alert(`Paiement réussi ! Facture créée. Merci pour votre commande.`);
     setShowPayment(false);
-    // Ici tu peux vider le panier ou rediriger vers une page de confirmation
   };
 
   const handlePaymentCancel = () => {
@@ -81,19 +74,16 @@ const CartPage = () => {
 
   return (
     <div className="cart-page">
-      {/* Header avec navigation */}
       <Navbar />
       <header className="cart-header">
-        {/* Logo SKINALOGY */}
         <div className="hero-content">
           <h1 className="hero-logo">SKINALOGY</h1>
         </div>
       </header>
 
-      {/* Section principale du panier */}
       <main className="cart-main">
         <div className="cart-container">
-          {/* Titre du panier */}
+
           <h2 className="cart-title">PANIER</h2>
           
           {cart.length === 0 ? (
@@ -121,7 +111,7 @@ const CartPage = () => {
             </div>
           ) : (
             <div className="cart-content">
-              {/* Liste des produits */}
+
               <div className="cart-items-section">
                 <div className="cart-items-container">
                   {cart.map(item => (
@@ -191,7 +181,6 @@ const CartPage = () => {
                 </div>
               </div>
 
-              {/* Récapitulatif */}
               <div className="cart-summary-section">
                 <div className="summary-container">
                   <h3 className="summary-title">RECAPITULATIF</h3>
@@ -207,13 +196,7 @@ const CartPage = () => {
                     Payer avec Stripe
                   </button>
                   
-                  {/* Logo Skinalogy dans le récapitulatif */}
-                  <div className="summary-logo">
-                    <div className="logo-icon">
-                      <div className="tree-icon"></div>
-                    </div>
-                    <div className="logo-text">SKINALOGY</div>
-                  </div>
+                  
                 </div>
               </div>
             </div>
@@ -221,20 +204,19 @@ const CartPage = () => {
         </div>
       </main>
 
-      {/* Modal de paiement Stripe - CORRIGÉ avec userId dynamique */}
       {showPayment && (
         <Elements stripe={stripePromise}>
           <StripePayment
             amount={cartTotal}
             cart={cart}
-            userId={getCurrentUserId()} // ← Plus de valeur en dur !
+            userId={getCurrentUserId()}
             onSuccess={handlePaymentSuccess}
             onCancel={handlePaymentCancel}
           />
         </Elements>
       )}
 
-      {/* Footer */}
+
       <Footer />
     </div>
   );

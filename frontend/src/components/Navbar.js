@@ -4,43 +4,15 @@ import './Navbar.css';
 import { useCart } from '../hooks/useCart';
 import cartService from '../services/CartService';
 
-// Ajoutez ce CSS à Navbar.css :
-/*
-.cart-link {
-  position: relative;
-}
-
-.cart-badge {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background-color: #ff4444;
-  color: white;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  font-size: 12px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
-}
-*/
 
 const Navbar = () => {
   const navigate = useNavigate();
   const { cartCount } = useCart();
   const isLoggedIn = !!localStorage.getItem('token');
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const isAdmin = user.role === 1;
 
   const handleLogout = () => {
-    // Nettoyer le panier lors de la déconnexion
     cartService.clearCartOnLogout();
     
     localStorage.removeItem('token');
@@ -53,14 +25,19 @@ const Navbar = () => {
       <nav className="navbar-nav">
         <div className="navbar-left">
           <Link to="/" className="navbar-link">HOME</Link>
+          {isAdmin && (
+            <Link to="/dashboard" className="navbar-link">DASHBOARD</Link>
+          )}
         </div>
  
         <div className="navbar-right">
+          
+          <Link to="/astuces" className="navbar-link">ASTUCES</Link>
           <Link to="/recherche" className="navbar-link">RECHERCHER</Link>
           {isLoggedIn ? (
             <>
               <Link to="/profil" className="navbar-link">MON PROFIL</Link>
-              <button className="navbar-link logout-btn" onClick={handleLogout}>DÉCONNEXION</button>
+              <button className="navbar-link logout-btn-Navbar" onClick={handleLogout}>DÉCONNEXION</button>
             </>
           ) : (
             <Link to="/connexion" className="navbar-link">CONNEXION</Link>

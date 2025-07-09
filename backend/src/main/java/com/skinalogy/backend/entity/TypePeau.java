@@ -14,14 +14,12 @@ public class TypePeau {
     @Column(name = "nom", length = 50, nullable = false)
     private String nom;
     
-    // Constructeurs
     public TypePeau() {}
     
     public TypePeau(String nom) {
         this.nom = nom;
     }
     
-    // Getters et Setters
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
     
