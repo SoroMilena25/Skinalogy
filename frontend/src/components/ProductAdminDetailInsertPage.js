@@ -26,7 +26,7 @@ const ProductAdminDetailInsertPage = () => {
   const skinTypes = ['Peau sèche', 'Peau grasse', 'Peau mixte', 'Peau normale'];
   const categories = ['Crèmes hydratantes', 'Crèmes solaires', 'Sérums', 'Toners', 'Masques', 'Démaquillants', 'Crèmes pour les yeux', 'Coffrets'];
 
-  // Utilitaires pour conversion id <-> nom
+  
   const skinTypesMap = {
     1: 'Peau sèche',
     2: 'Peau grasse',
@@ -44,7 +44,7 @@ const ProductAdminDetailInsertPage = () => {
     8: 'Coffret'
   };
 
-  // Fonctions pour obtenir l'id à partir du nom
+  
   const getSkinTypeId = (name) => {
     for (const [id, n] of Object.entries(skinTypesMap)) {
       if (n === name) return parseInt(id);
@@ -53,7 +53,7 @@ const ProductAdminDetailInsertPage = () => {
   };
   const getCategoryId = (name) => {
     for (const [id, n] of Object.entries(categoriesMap)) {
-      if (n === name || n + 's' === name) return parseInt(id); // gestion pluriel
+      if (n === name || n + 's' === name) return parseInt(id); 
     }
     return null;
   };
@@ -106,10 +106,10 @@ const ProductAdminDetailInsertPage = () => {
     }
     try {
       setLoading(true);
-      // Upload image obligatoire
+      
       const uploadResult = await ApiService.uploadImage(selectedImage);
       const imagePath = uploadResult.imagePath;
-      // Préparer le payload
+      
       const payload = {
         nom: productData.name,
         description: productData.description,

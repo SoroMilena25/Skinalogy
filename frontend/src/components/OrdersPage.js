@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './OrdersPage.css';
 import Navbar from './Navbar';
-import apiService from '../services/apiService'; // adapte le chemin si besoin
+import apiService from '../services/apiService'; 
 import { useNavigate } from 'react-router-dom';
 
 const OrdersPage = () => {
@@ -104,7 +104,7 @@ const OrdersPage = () => {
                       <td>{order.email}</td>
                     </tr>
                   ))}
-                  {/* Lignes vides pour garder la hauteur si besoin */}
+                  
                   {orders.length < 10 && Array.from({ length: 10 - orders.length }, (_, index) => (
                     <tr key={`empty-${index}`} className="empty-row">
                       <td></td>
@@ -121,15 +121,7 @@ const OrdersPage = () => {
               </div>
             </div>
             <div className="filters-panel">
-              {/* <div className="filter-group">
-                <label className="filter-label">Date</label>
-                <input
-                  type="text"
-                  className="filter-input"
-                  value={filters.date}
-                  onChange={(e) => handleFilterChange('date', e.target.value)}
-                />
-              </div> */}
+             
               <div className="filter-group">
                 <label className="filter-label">N° de commande</label>
                 <input

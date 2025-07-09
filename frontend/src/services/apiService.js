@@ -274,7 +274,7 @@ class ApiService {
     return response.json();
   }
 
-  // Ajoute la mise à jour d'un produit
+
   async updateProduit(id, produit) {
     const response = await fetch(`${API_BASE_URL}/produits/${id}`, {
       method: 'PUT',
@@ -288,7 +288,7 @@ class ApiService {
     return response.json();
   }
 
-  // Ajoute la suppression d'un produit
+
   async deleteProduit(id) {
     const response = await fetch(`${API_BASE_URL}/produits/${id}`, {
       method: 'DELETE'
@@ -296,7 +296,7 @@ class ApiService {
     if (!response.ok) {
       throw new Error('Erreur lors de la suppression du produit');
     }
-    // Si le backend ne retourne pas de body, ne pas parser en JSON
+
     const text = await response.text();
     if (text) {
       try {
@@ -308,7 +308,7 @@ class ApiService {
     return null;
   }
 
-  // Upload d'une image produit
+
   async uploadImage(file) {
     const formData = new FormData();
     formData.append('file', file);
@@ -320,10 +320,10 @@ class ApiService {
       const text = await response.text();
       throw new Error(text || "Erreur lors de l'upload de l'image");
     }
-    return response.json(); // { imagePath: 'images/filename.ext' }
+    return response.json(); 
   }
 
-  // Insertion d'un produit
+
   async insertProduit(produit) {
     const response = await fetch(`${API_BASE_URL}/produits`, {
       method: 'POST',

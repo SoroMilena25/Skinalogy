@@ -18,10 +18,6 @@ public class Facture {
     @Column(name = "total", nullable = false)
     private Double total;
     
-    /*
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "IdUtilisateur", insertable = false, updatable = false)
-    private Utilisateur utilisateur; */
     
     public Facture() {}
     
@@ -39,7 +35,4 @@ public class Facture {
     public Double getTotal() { return total; }
     public void setTotal(Double total) { this.total = total; }
     
-    /* 
-    public Utilisateur getUtilisateur() { return utilisateur; }
-    public void setUtilisateur(Utilisateur utilisateur) { this.utilisateur = utilisateur; }*/
 }

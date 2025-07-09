@@ -10,7 +10,7 @@ const DashboardPage = () => {
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [errorOrders, setErrorOrders] = useState(null);
 
-  // Ajout des states pour les KPIs
+  
   const [nbUsers, setNbUsers] = useState(0);
   const [nbCommandes, setNbCommandes] = useState(0);
   const [nbProduits, setNbProduits] = useState(0);
@@ -20,7 +20,7 @@ const DashboardPage = () => {
     setErrorOrders(null);
     apiService.getStatsFacturesParMois(selectedYear)
       .then(data => {
-        // Ajoute une couleur à chaque mois pour le graphique
+        
         const colors = ['#4A90A4', '#2F7D7B', '#F4A261', '#A8DADC', '#E76F51', '#4A90A4', '#A8DADC', '#F1A5A5', '#F1A5A5', '#E76F51', '#B5838D', '#6D6875'];
         const formatted = data.map((item, idx) => ({
           month: item.mois,
@@ -37,13 +37,13 @@ const DashboardPage = () => {
   }, [selectedYear]);
 
   useEffect(() => {
-    // Récupère le nombre d'utilisateurs
+   
     apiService.getAllUsers().then(users => setNbUsers(users.length)).catch(() => setNbUsers(0));
-    // Récupère le nombre de commandes (factures)
+    
     apiService.getStatsFacturesParMois(selectedYear)
       .then(data => setNbCommandes(data.reduce((acc, curr) => acc + curr.nombre, 0)))
       .catch(() => setNbCommandes(0));
-    // Récupère le nombre de produits
+    
     apiService.getAllProduits().then(produits => setNbProduits(produits.length)).catch(() => setNbProduits(0));
   }, [selectedYear]);
 

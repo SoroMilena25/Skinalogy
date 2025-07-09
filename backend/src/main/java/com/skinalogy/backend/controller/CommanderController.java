@@ -106,10 +106,10 @@ public class CommanderController {
         List<Facture> factures = factureService.getAllFacturesOrderByDatePaiementDesc();
         List<Map<String, Object>> result = new ArrayList<>();
         for (Facture f : factures) {
-            // Récupère un Commander lié à cette facture
+            
             List<Commander> commandes = commanderService.getCommandesByFacture(f.getId());
             if (!commandes.isEmpty()) {
-                Commander commande = commandes.get(0); // On prend le premier
+                Commander commande = commandes.get(0); 
                 Utilisateur utilisateur = commande.getUtilisateur();
                 Map<String, Object> map = new HashMap<>();
                 map.put("orderNumber", f.getId());

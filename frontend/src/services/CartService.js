@@ -220,7 +220,7 @@ class CartService {
         if (notification.parentNode) {
           notification.parentNode.removeChild(notification);
         }
-        // Si plus aucune notif, on retire le conteneur
+
         if (container.childElementCount === 0 && container.parentNode) {
           container.parentNode.removeChild(container);
         }

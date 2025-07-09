@@ -22,7 +22,7 @@ public class UploadController {
 
     private static final Logger logger = LoggerFactory.getLogger(UploadController.class);
 
-    // Chemin absolu vers le dossier images du frontend (à adapter si besoin)
+    
     @Value("${upload.images.dir:C:/Projet/Skinalogy/frontend/public/images}")
     private String imagesDir;
 

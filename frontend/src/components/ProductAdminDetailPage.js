@@ -27,7 +27,7 @@ const ProductAdminDetailPage = () => {
   const skinTypes = ['Peau sèche', 'Peau grasse', 'Peau mixte', 'Peau normale'];
   const categories = ['Crèmes hydratantes', 'Crèmes solaires', 'Sérums', 'Toners', 'Masques', 'Démaquillants', 'Crèmes pour les yeux', 'Coffrets'];
 
-  // Utilitaires pour conversion id <-> nom
+  
   const skinTypesMap = {
     1: 'Peau sèche',
     2: 'Peau grasse',
@@ -45,7 +45,7 @@ const ProductAdminDetailPage = () => {
     8: 'Coffret'
   };
 
-  // Fonctions pour obtenir l'id à partir du nom
+ 
   const getSkinTypeId = (name) => {
     for (const [id, n] of Object.entries(skinTypesMap)) {
       if (n === name) return parseInt(id);
@@ -54,7 +54,7 @@ const ProductAdminDetailPage = () => {
   };
   const getCategoryId = (name) => {
     for (const [id, n] of Object.entries(categoriesMap)) {
-      if (n === name || n + 's' === name) return parseInt(id); // gestion pluriel
+      if (n === name || n + 's' === name) return parseInt(id); 
     }
     return null;
   };
@@ -113,7 +113,7 @@ const ProductAdminDetailPage = () => {
     try {
       let imagePath = productData.image;
       if (selectedImage) {
-        // Upload automatique via l'API backend
+        
         const uploadResult = await ApiService.uploadImage(selectedImage);
         imagePath = uploadResult.imagePath;
         console.log('Image uploadée, chemin:', imagePath);
@@ -125,7 +125,7 @@ const ProductAdminDetailPage = () => {
   };
 
   const updateProduct = async (imagePath) => {
-    // Préparer les données à envoyer à l'API
+    
     const payload = {
       nom: productData.name,
       description: productData.description,

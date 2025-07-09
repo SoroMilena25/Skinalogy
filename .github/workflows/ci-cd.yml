@@ -11,7 +11,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  # 🧪 TESTS BACKEND avec MySQL
+  # TESTS BACKEND avec MySQL
   test-backend:
     runs-on: ubuntu-latest
     
@@ -74,7 +74,7 @@ jobs:
         name: backend-test-results
         path: backend/target/surefire-reports/
 
-  # 🧪 TESTS FRONTEND
+  # TESTS FRONTEND
   test-frontend:
     runs-on: ubuntu-latest
     steps:
@@ -102,7 +102,7 @@ jobs:
       with:
         directory: frontend/coverage
 
-  # 🏗️ BUILD - Seulement pour staging et main
+  # BUILD - Seulement pour staging et main
   build:
     needs: [test-backend, test-frontend]
     runs-on: ubuntu-latest
@@ -149,7 +149,7 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
-  # 🚀 DEPLOY DEV
+  # DEPLOY DEV
   deploy-dev:
     needs: [test-backend, test-frontend]
     runs-on: ubuntu-latest
@@ -159,7 +159,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: 🚀 Deploy to DEV Environment
+    - name: Deploy to DEV Environment
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.AZURE_VM_HOST }}
@@ -188,9 +188,9 @@ jobs:
           docker-compose down || true
           docker-compose up -d --build
           
-          echo "✅ DEV deployed on http://20.199.26.188:3000"
+          echo "DEV deployed on http://20.199.26.188:3000"
 
-  # 🧪 DEPLOY STAGING
+  # DEPLOY STAGING
   deploy-staging:
     needs: [test-backend, test-frontend, build]
     runs-on: ubuntu-latest
@@ -200,14 +200,14 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: 🧪 Deploy to STAGING Environment
+    - name: Deploy to STAGING Environment
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.AZURE_VM_HOST }}
         username: ${{ secrets.AZURE_VM_USER }}
         key: ${{ secrets.AZURE_VM_SSH_KEY }}
         script: |
-          echo "🔄 Deploying to STAGING environment (port 3001)..."
+          echo "Deploying to STAGING environment (port 3001)..."
           
           cd /opt/skinalogy/staging || mkdir -p /opt/skinalogy/staging && cd /opt/skinalogy/staging
           
@@ -229,10 +229,10 @@ jobs:
           docker-compose down || true
           docker-compose up -d --build
           
-          echo "✅ STAGING deployed on http://20.199.26.188:3001"
-          echo "⏰ Containers are starting, wait 1-2 minutes for full availability"
+          echo "STAGING deployed on http://20.199.26.188:3001"
+          echo "Containers are starting, wait 1-2 minutes for full availability"
 
-  # 🏆 DEPLOY PRODUCTION
+  # DEPLOY PRODUCTION
   deploy-production:
     needs: [test-backend, test-frontend, build]
     runs-on: ubuntu-latest
@@ -242,14 +242,14 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: 🏆 Deploy to PRODUCTION Environment
+    - name: Deploy to PRODUCTION Environment
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.AZURE_VM_HOST }}
         username: ${{ secrets.AZURE_VM_USER }}
         key: ${{ secrets.AZURE_VM_SSH_KEY }}
         script: |
-          echo "🔄 Deploying to PRODUCTION environment (port 80)..."
+          echo "Deploying to PRODUCTION environment (port 80)..."
           
           cd /opt/skinalogy/production || mkdir -p /opt/skinalogy/production && cd /opt/skinalogy/production
           
@@ -271,12 +271,12 @@ jobs:
           docker-compose down || true
           docker-compose up -d --build
           
-          echo "🎉 PRODUCTION deployed on http://20.199.26.188"
+          echo "PRODUCTION deployed on http://20.199.26.188"
     
-    - name: 📢 Notify deployment success
+    - name: Notify deployment success
       run: |
-        echo "🚀 PRODUCTION DEPLOYMENT COMPLETED!"
-        echo "🌐 Skinalogy is live: http://20.199.26.188"
-        echo "📊 Staging: http://20.199.26.188:3001"
-        echo "🛠️ Dev: http://20.199.26.188:3000"
-        echo "⏰ Wait 1-2 minutes for containers to fully start"
+        echo "PRODUCTION DEPLOYMENT COMPLETED!"
+        echo "Skinalogy is live: http://20.199.26.188"
+        echo "Staging: http://20.199.26.188:3001"
+        echo "Dev: http://20.199.26.188:3000"
+        echo "Wait 1-2 minutes for containers to fully start"

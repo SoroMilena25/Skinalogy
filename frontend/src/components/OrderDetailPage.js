@@ -18,15 +18,15 @@ const OrderDetailPage = () => {
     const fetchDetails = async () => {
       try {
         setLoading(true);
-        // 1. Récupérer la facture
+        
         debug = 'facture';
         const factureData = await apiService.getFactureById(orderNumber);
         setFacture(factureData);
-        // 2. Récupérer les lignes de commande
+        
         debug = 'commandes';
         const commandesData = await apiService.getCommandesByFacture(orderNumber);
         setCommandes(commandesData);
-        // 3. Récupérer les infos produit et client
+        
         if (commandesData.length > 0) {
           debug = 'client';
           const clientId = commandesData[0].idUtilisateur;
@@ -56,7 +56,7 @@ const OrderDetailPage = () => {
     console.log('Commande expédiée');
   };
 
-  // Helper pour obtenir le chemin de l'image produit (même logique que ProductPage/TipDetailPage)
+ 
   const getProductImageUrl = (produit) => {
     if (!produit || !produit.image) return null;
     return produit.image.startsWith('/') ? produit.image : `/${produit.image}`;
@@ -70,7 +70,7 @@ const OrderDetailPage = () => {
     return <div className="order-detail-page"><div className="order-detail-container">{error}</div></div>;
   }
 
-  // Construction des items à afficher (fusion commandes + produits)
+ 
   const items = commandes.map((cmd, idx) => ({
     ...cmd,
     produit: produits[idx] || {},

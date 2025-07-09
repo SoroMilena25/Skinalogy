@@ -63,7 +63,7 @@ const LoginPage = () => {
       if (data) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.utilisateur));
-        // Insertion du log de connexion utilisateur dans MongoDB
+        
         if (data.utilisateur && data.utilisateur.email) {
           try {
             await apiService.logLogin(data.utilisateur.email);

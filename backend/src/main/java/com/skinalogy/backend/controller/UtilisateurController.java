@@ -175,7 +175,7 @@ public class UtilisateurController {
                                 Produit produit = commande.getProduit();
                                 Map<String, Object> item = new HashMap<>();
                                 
-                                // Types corrects selon vos entités :
+                                
                                 item.put("nom", produit != null ? produit.getNom() : "Produit inconnu"); 
                                 item.put("image", produit != null ? produit.getImage() : null);          
                                 item.put("quantite", commande.getQuantite());                           
@@ -187,16 +187,16 @@ public class UtilisateurController {
                     
 
                     Map<String, Object> factureAvecCommandes = new HashMap<>();
-                    factureAvecCommandes.put("factureId", facture.getId());              // Integer
-                    factureAvecCommandes.put("datePaiement", facture.getDatePaiement()); // LocalDateTime
-                    factureAvecCommandes.put("total", facture.getTotal());               // Double
-                    factureAvecCommandes.put("items", items);                            // List<Map<String, Object>>
+                    factureAvecCommandes.put("factureId", facture.getId());              
+                    factureAvecCommandes.put("datePaiement", facture.getDatePaiement()); 
+                    factureAvecCommandes.put("total", facture.getTotal());               
+                    factureAvecCommandes.put("items", items);                            
                     
                     facturesAvecCommandes.add(factureAvecCommandes);
                 }
             }
             
-            // Trier par date de paiement décroissante (plus récent en premier)
+            
             facturesAvecCommandes.sort((f1, f2) -> {
                 LocalDateTime date1 = (LocalDateTime) f1.get("datePaiement");
                 LocalDateTime date2 = (LocalDateTime) f2.get("datePaiement");
@@ -210,7 +210,7 @@ public class UtilisateurController {
         }
     }
     
-    // DELETE /api/utilisateurs/{id} - Supprimer un utilisateur
+    
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUtilisateur(@PathVariable Integer id) {
         return utilisateurService.deleteUtilisateur(id) ? 

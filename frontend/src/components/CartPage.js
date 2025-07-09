@@ -7,7 +7,7 @@ import Footer from './Footer';
 import StripePayment from './StripePayment';
 import { useCart } from '../hooks/useCart';
 
-const stripePromise = loadStripe('pk_test_51RiFrTBGnhaIcuSbWV3LaC2F6TMv5XAsoXMUVPRCo6qbYn0ACSxHzEuEMy6Af1roQCivCRGXgwHWUxSi2cvncgwB00UQVwjYAp');
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
 const CartPage = () => {
   const { cart, cartTotal, updateQuantity, removeFromCart, clearCart } = useCart();
