@@ -98,23 +98,8 @@ public class FactureService {
         return factureRepository.countFacturesPeriode(startOfDay, endOfDay);
     }
     
-    public List<java.util.Map<String, Object>> getStatsFacturesParMois(int annee) {
-        String[] moisLabels = {"Jan", "Fév", "Mar", "Avr", "Mai", "Jun", "Jul", "Aoû", "Sep", "Oct", "Nov", "Déc"};
-        List<Object[]> results = factureRepository.countFacturesByMonth(annee);
-        java.util.Map<Integer, Long> moisToCount = new java.util.HashMap<>();
-        for (Object[] row : results) {
-            moisToCount.put((Integer) row[0], (Long) row[1]);
-        }
-        List<java.util.Map<String, Object>> stats = new java.util.ArrayList<>();
-        for (int i = 1; i <= 12; i++) {
-            java.util.Map<String, Object> map = new java.util.HashMap<>();
-            map.put("mois", moisLabels[i-1]);
-            map.put("nombre", moisToCount.getOrDefault(i, 0L));
-            stats.add(map);
-        }
-        return stats;
-    }
 
+    
     public List<Facture> getAllFacturesOrderByDatePaiementDesc() {
         return factureRepository.findAllByOrderByDatePaiementDesc();
     }

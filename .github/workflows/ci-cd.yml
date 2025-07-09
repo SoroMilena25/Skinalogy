@@ -61,6 +61,7 @@ jobs:
         SPRING_DATASOURCE_USERNAME: skinalogy_user
         SPRING_DATASOURCE_PASSWORD: skinalogy_password
         SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
+        STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
     
     - name: Generate test report
       run: |
